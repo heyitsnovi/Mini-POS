@@ -1,0 +1,83 @@
+
+    .barcode-item{
+            font-size: 30px !important;
+            font-weight: bold;
+            text-align: center;
+    }
+    .grand-total{
+        font-size: 35px;
+        display: block;
+        font-weight: bold;
+        margin-top: -25px;
+    }
+    .label-grand{
+            font-size: 20px;
+        font-weight: bold;
+    }
+    .table-pos-sales{
+        font-weight: bold;
+        font-size: 15px;
+    }
+    .box-title{
+        font-size: 22px !important;
+        font-weight: bold !important;
+    }
+    .btn-open-shop-inventory{
+        margin-top: 10px;
+    }
+    .discount-total{
+        font-size: 35px;
+        display: block;
+        font-weight: bold;
+        margin-top: -25px
+    }
+    .amt-payable-lbl,.amt-payable,.coupon-code-attached,.coupon-code-name,.coupon-code-amount,.coupon-code-value{
+     
+        font-size: 15px;
+    }
+    .amt_paid{
+        text-align: center; 
+        font-weight: bold;
+        font-size: 20px;
+    }
+    .searchItem{
+            font-size: 20px !important;
+            font-weight: bold;
+            text-align: left; 
+            margin-bottom: 10px;
+    }
+    .badge:hover {
+      color: #ffffff;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .badge-error {
+      background-color: #b94a48;
+    }
+    .badge-error:hover {
+      background-color: #953b39;
+    }
+    .badge-warning {
+      background-color: #f89406;
+    }
+    .badge-warning:hover {
+      background-color: #c67605;
+    }
+    .badge-success {
+      background-color: #468847;
+    }
+    .badge-success:hover {
+      background-color: #356635;
+    }
+    .badge-info {
+      background-color: #3a87ad;
+    }
+    .badge-info:hover {
+      background-color: #2d6987;
+    }
+    .badge-inverse {
+      background-color: #333333;
+    }
+    .badge-inverse:hover {
+      background-color: #1a1a1a;
+    }

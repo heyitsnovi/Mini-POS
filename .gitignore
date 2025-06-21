@@ -1,0 +1,64 @@
+# Laravel core files to ignore
+
+/vendor/
+/node_modules/
+.env
+.env.*.backup
+.phpunit.result.cache
+
+# Laravel storage and cache
+/storage/*
+!/storage/app/
+/storage/app/*
+!/storage/app/public/
+/storage/app/public/*
+!/storage/framework/
+/storage/framework/*
+!/storage/framework/cache/
+/storage/framework/cache/*
+!/storage/framework/sessions/
+/storage/framework/sessions/*
+!/storage/framework/testing/
+/storage/framework/testing/*
+!/storage/framework/views/
+/storage/framework/views/*
+!/storage/logs/
+/storage/logs/*
+
+# Laravel mix / frontend build artifacts
+/public/hot
+/public/storage
+/public/mix-manifest.json
+/public/js/*.map
+/public/css/*.map
+
+# IDE and editor settings
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Composer & npm logs
+npm-debug.log
+yarn-error.log
+composer.lock
+
+# Laravel Telescope (optional, if used)
+storage/telescope
+
+# Laravel Horizon (if used)
+/horizon_assets/
+
+# Local testing and debug files
+*.sqlite
+*.sqlite3
+*.log
+*.seeders.php
+*.bak
+
+# Custom user ignores
+*.local

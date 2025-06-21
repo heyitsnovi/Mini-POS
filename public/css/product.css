@@ -1,0 +1,26 @@
+input,select,textarea{
+	font-weight: bold;
+	font-size: 40px;
+}
+label{
+	font-size: 18px;
+}
+.btn-saveproduct,.btn-addimage{
+margin-bottom: 10px;
+}
+.dropzone {
+border: 2px dashed #0087F7;
+border-radius: 5px;
+text-align: center;
+background: white; }
+.dropzone .dz-message {
+font-weight: 400; }
+.dropzone .dz-message .note {
+font-size: 0.8em;
+font-weight: 200;
+display: block;
+margin-top: 1.4rem; }
+
+.btn-upload-product-img{
+	margin-top: 10px;
+}
