@@ -38,7 +38,6 @@ class SalesController extends Controller{
 						[
 							'status'=>1,
 							'sales_total'=>number_format(\Cart::getTotal(),2),
-							'debug'=>2,
 							'p'=>\Cart::get($product_code)->quantity
 						]);
 				}else{
