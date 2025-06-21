@@ -146,7 +146,7 @@ class SalesController extends Controller{
 							\Cart::clearCartConditions();
 							$req->session()->forget('coupon_code');
 
-							$condition = new \Darryldecode\Cart\CartCondition(array(
+							$condition = new \Joelwmale\Cart\CartCondition(array(
 								    'name' =>$coupon_info->first()->coupon_code,
 								    'type' => 'coupon',
 								    'target' => 'total', 
