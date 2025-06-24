@@ -68,6 +68,7 @@ Route::get('admin/sales/print-transaction/code/{transaction_id}', [PrintControll
 Route::get('admin/product/suppliers/view/{supplier_id}', [SuppliersController::class, 'viewSupplier']);
 Route::get('admin/utils/database-backups', [UtilsController::class, 'backUpList']);
 Route::get('test/print', [PrintController::class, 'test']);
+Route::get('admin/sales/daily',[ReportsController::class,'dailySales']);
 
 // POST Routes
 Route::post('admin/sales/pos', [SalesController::class, 'addSalesItem']);

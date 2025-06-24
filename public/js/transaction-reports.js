@@ -65,7 +65,7 @@ $(document).on('click','.btn-view-transaction',function(){
 				var box = bootbox.dialog({
 					title: 'Customer Transactions',
 					message:' ',
-					size:'medium'
+					size:'large'
 				});
 				box.contents().find('.bootbox-body').html(response);
 			}

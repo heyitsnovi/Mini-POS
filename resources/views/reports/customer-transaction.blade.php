@@ -17,13 +17,13 @@
 	Transaction OR # : <span>{{$tx_code}}</span>
 </div>
 <div class="table-responsive">
-	<table class="table table-condensed table-stripped table-bordered tbl-order-log-customer">
+	<table class="table table-condensed table-stripped table-bordered tbl-order-log-customer" style="width:100%">
 		<thead>
 			<tr>
 				<th>Barcode/SKU #</th>
 				<th>Item Name</th>
+				<th>Quantity</th>
 				<th>Price</th>
-				<th class="text-center">Quantity</th>
 				<th>Total</th>
 			</tr>
 		</thead>
@@ -37,10 +37,10 @@
 			@endphp	
 				<tr>
 					<td>{{$item->product_code}}</td>
-					<td>{{$item->product_name}}</td>
-					<td >{{number_format($item->product_price,2)}}</td>
-					<td class="text-center">{{$item->product_qty_ordered}}</td>
-					<td>{{number_format($item->product_price * $item->product_qty_ordered,2)}}</td>
+					<td  class="text-center">{{$item->product_name}}</td>
+					<td  class="text-right">{{$item->product_qty_ordered}}</td>
+					<td  class="text-right">{{number_format($item->product_price,2)}}</td>
+					<td  class="text-right">{{number_format($item->product_price * $item->product_qty_ordered,2)}}</td>
 				</tr>
 			@endforeach
 		</tbody>
@@ -50,6 +50,10 @@
 <script>
 	$('.tbl-order-log-customer').DataTable( {
 				        dom: 'Bfrtip',
+				           "columnDefs": [
+						        { "width": "150px", "targets": 0 }, 
+						        { "width": "100px", "targets": 3 } 
+						    ],
 				        buttons: [
 				       {
 				       	extend: 'print',

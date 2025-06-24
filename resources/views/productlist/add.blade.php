@@ -7,7 +7,7 @@
     <input type="hidden" name="_uploaded_img" value="no-image.png" />
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-7">
             <div class="box box-success">
                 <div class="box-header with-border">
                   <h3 class="box-title"><i class="fa fa-cubes"></i> New Product</h3>
@@ -111,9 +111,7 @@
                 </div>
               </div>
             </div>
-    </div>
-     <div class="row">
-        <div class="col-md-12">
+                    <div class="col-md-5">
             <div class="box box-success">
                 <div class="box-header with-border">
                   <h3 class="box-title"><i class="fa fa-photo"></i> Product Image (Optional)</h3>
@@ -131,5 +129,8 @@
                 </div>
             </div>
         </div>
+        </div>
+     <div class="row">
+
     </div>
 @endsection

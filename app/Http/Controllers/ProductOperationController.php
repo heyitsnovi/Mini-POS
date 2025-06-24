@@ -112,7 +112,19 @@ class ProductOperationController extends Controller{
                 ]);
 
            echo json_encode($post_status_container);
+           
         }else{
+
+               $product_img_path =  '';
+
+               $str = preg_replace('/(images\/)+/', 'images/', $req->input('_uploaded_img'));
+
+                if (strpos($str, 'images/') !== 0) {
+                    $product_img_path = 'images/' . $str;
+                }else{
+                    $product_img_path = $str;
+                }
+
 
               $update_status = DB::table('product_list')
                 ->where('product_code','=',$req->input('_itemcode'))
@@ -127,7 +139,7 @@ class ProductOperationController extends Controller{
                     'restock_count'=>$req->input('product_restock'),
                     'wholesale_price'=>$req->input('product_wholesale_price'),
                     'product_supplier'=>$req->input('product_supplier'),
-                     'product_image'=>'images/'.$req->input('_uploaded_img'),
+                     'product_image'=>$product_img_path,
                     'updated_at'=>date('Y-m-d h:i:s'),
               ]);
 

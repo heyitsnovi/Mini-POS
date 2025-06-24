@@ -6,9 +6,44 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Validator;
-
+use Carbon\Carbon;
 
 class ReportsController extends Controller{
+
+
+	public function dailySales(){
+
+	    $today = Carbon::today()->format('Y-m-d');
+	    $yesterday = Carbon::yesterday()->format('Y-m-d');
+
+	    $today_total = DB::table('transactions')
+	        ->join('order_log', 'order_log.transaction_id', '=', 'transactions.transaction_log_id')
+	        ->join('product_list', 'product_list.product_code', '=', 'order_log.product_code')
+	        ->whereDate('transaction_date', $today)
+	        ->selectRaw('SUM(order_log.product_qty_ordered * product_list.product_price) as total')
+	        ->value('total') ?? 0;
+
+	    $yesterday_total = DB::table('transactions')
+	        ->join('order_log', 'order_log.transaction_id', '=', 'transactions.transaction_log_id')
+	        ->join('product_list', 'product_list.product_code', '=', 'order_log.product_code')
+	        ->whereDate('transaction_date', $yesterday)
+	        ->selectRaw('SUM(order_log.product_qty_ordered * product_list.product_price) as total')
+	        ->value('total') ?? 0;
+
+	    // Calculate % difference
+	    $difference = $yesterday_total > 0
+	        ? (($today_total - $yesterday_total) / $yesterday_total) * 100
+	        : ($today_total > 0 ? 100 : 0); // avoid division by zero
+
+	    $is_increase = $today_total >= $yesterday_total;
+
+	    return view('reports.sales-today', [
+	        'today_sales' => $today_total,
+	        'yesterday_sales' => $yesterday_total,
+	        'percentage_difference' => round($difference, 2),
+	        'is_increase' => $is_increase,
+	    ]);
+	}
 
 	public function salesReport(Request $req){
 
