@@ -20,7 +20,7 @@
 	<div class="col-md-6">
 		<div class="form-group">
 			<label>OR Number:</label>
-			<input type="text" name="or_number" class="form-control or_number" />
+			<input type="text" name="or_number" class="form-control or_number" value="{{$order_id}}" readonly="" />
 			<div class="helper error-ornumber"></div>
 		</div>
 	</div>

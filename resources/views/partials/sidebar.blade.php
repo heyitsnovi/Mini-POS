@@ -92,7 +92,7 @@
                         <a href="{{ url('admin/sales/report') }}">
                             <i class="fa fa-info-circle"></i>
                             <span class="title">
-                                Product Purchase Log
+                                Purchased Products
                             </span>
                         </a>
                     </li>
@@ -100,7 +100,7 @@
                         <a href="{{ url('admin/customer-transactions/report') }}">
                             <i class="fa fa-user"></i>
                             <span class="title">
-                                 Customer Transactions Log
+                                 Customer Transactions
                             </span>
                         </a>
                     </li>    
@@ -108,7 +108,7 @@
                         <a href="{{ url('admin/product/restock-products') }}">
                             <i class="fa fa-level-up"></i>
                             <span class="title">
-                                 Products to Restock Log
+                                 Products to Restocks
                             </span>
                         </a>
                     </li>    

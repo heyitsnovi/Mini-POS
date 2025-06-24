@@ -26,7 +26,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>SKU/Product Code/Barcode:</label>
-                                <input type="text" name="product_barcode" class="form-control product_barcode" />
+                                <input type="text" name="product_barcode" class="form-control product_barcode" value="{{$barcode_id}}"  readonly="" />
                             </div>
                         </div>
                             <div class="col-md-6">
@@ -122,7 +122,7 @@
               class="dropzone"
               id="upload-product-image">
               </form>
-              <button class="btn btn-primary btn-upload-product-img pull-right">
+              <button class="btn btn-primary btn-upload-product-img pull-right" type="button">
                 <i class="fa fa-cloud-upload"></i>
                   Upload
               </button>      
@@ -130,7 +130,4 @@
             </div>
         </div>
         </div>
-     <div class="row">
-
-    </div>
 @endsection

@@ -23,14 +23,14 @@ class PrintController extends Controller{
 
 		$customer_info = DB::table('transactions')->where('transaction_log_id','=',$transaction_id)->first();
 
-		$str.='<html><head><title>Print Order(s)</title></head><body>';
+		$str.='<html><head><title>Order Details</title></head><body>';
 		$str.='
 			<style>
 			body{
 				font-family: Tahoma;
 			}
-			.dotted{
-				    
+			table td, table th, table tr {
+				border: 1px solid #c9c9c9 !important
 				}
 				table{
 				    border-collapse:collapse;
@@ -39,9 +39,9 @@ class PrintController extends Controller{
 			
 	 	$str.='
 	 	<div style="text-align:center;">
-		 	<h3>ABC STORE</h3>
-		 	<div style="font-size:11px;  margin-top:-120px;">123 Orange Street New York City USA </div>
-		 	<div style="font-size:11px;">Tel Nos: (123)-456 (456)-789</div>
+		 	<h3>V.A. Hollowblocks & Construction Supplies</h3>
+		 	<div style="font-size:11px;  margin-top:-120px;">Purok 2 Pondol Loon Bohol </div>
+		 	<div style="font-size:11px;">Phone No: 09985367946</div>
 	 	</div>
 	 	<div>
 	 	 	<br>
@@ -51,9 +51,9 @@ class PrintController extends Controller{
 	 	</div>
 	 	<br>
 	 	</div>
-	 	<div style="text-align:center; margin-bottom:10px;">Order Details</div>
+	 	<div style="text-align:center; margin-bottom:10px; font-weight:bold;">ORDER DETAILS</div>
 
-	 	<table border="0">
+	 	<table border="1">
 	 	<tr class="dotted">
 	 			<td>Item Name</td>
 	 			<td style="text-align:center;">Price</td>
@@ -72,10 +72,10 @@ class PrintController extends Controller{
 			$total_payable+=($order->product_price * $order->product_qty_ordered);
 
 					$str.='<tr class="dotted">';
-					$str.='<td>'.$order->product_name.'</td>';
+					$str.='<td>'.$order->product_name.'   </td>';
 					$str.='<td style="text-align:center;">'.number_format($order->product_price,2).'</td>';
-					$str.='<td style="text-align:center;">'.$order->product_qty_ordered.'</td>';
-					$str.='<td style="text-align:center;">'.number_format(($order->product_price * $order->product_qty_ordered),2).'</td>';
+					$str.='<td style="text-align:right;">'.$order->product_qty_ordered.'</td>';
+					$str.='<td style="text-align:right;">'.number_format(($order->product_price * $order->product_qty_ordered),2).'</td>';
  				$str.='</tr>';
 		}
 
@@ -100,4 +100,5 @@ class PrintController extends Controller{
 
 	}
 }
+
 ?>

@@ -107,12 +107,20 @@ class ProductListController extends Controller{
                                     ->get();
         $suppliers = DB::table('suppliers')->get();
 
+
+        $last_id = DB::table('product_list')
+                ->orderBy('product_id', 'DESC')
+                ->first();
+
+        $barcode_id =  sprintf("%04d",( $last_id->product_id)+1);
+
     	return view('productlist.add',
     		[
                   'custom_js'=>['add-product.js'],
                   'custom_css'=>['product.css'],
                   'product_categories'=>$listProductsCategory,
-                  'suppliers'=>$suppliers
+                  'suppliers'=>$suppliers,
+                  'barcode_id'=>$barcode_id
             ]
         );
     }
