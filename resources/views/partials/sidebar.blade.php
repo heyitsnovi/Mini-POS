@@ -25,9 +25,9 @@
                     <span class="title">MINI POS Dashboard</span>
                 </a>
             </li>
-
-            @if(Auth::user()->isAn('cashier'))
-            <li class="treeview  {{ $request->segment(2) == 'abilities' ? 'active' : '' }}">
+                
+            @if(Auth::user()->isAn('cashier') || Auth::user()->isAn('admin') )
+            <li class="treeview  {{ $request->segment(2) == 'sales' ? 'active' : '' }}">
                 <a href="{{url('admin/sales/new')}}">
                     <i class="fa fa-shopping-cart"></i>
                     <span class="title">Start Point of Sale</span>
@@ -36,14 +36,7 @@
             @endif
             
             @can('users_manage')
-
-            <li class="treeview  {{ $request->segment(2) == 'abilities' ? 'active' : '' }}">
-                <a href="{{url('admin/sales/new')}}">
-                    <i class="fa fa-shopping-cart"></i>
-                    <span class="title">Start Point of Sale</span>
-                </a>
-            </li>
-
+ 
 
             <li class="treeview">
                  <a href="#">
@@ -155,7 +148,7 @@
                         <a href="{{ route('admin.users.index') }}">
                             <i class="fa fa-user"></i>
                             <span class="title">
-                                User
+                                Users
                             </span>
                         </a>
                     </li>

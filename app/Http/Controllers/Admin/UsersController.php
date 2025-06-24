@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUsersRequest;
 use App\Http\Requests\Admin\UpdateUsersRequest;
-
+use Bouncer;
 class UsersController extends Controller
 {
     /**
@@ -57,7 +57,9 @@ class UsersController extends Controller
         $user = User::create($request->all());
 
         foreach ($request->input('roles') as $role) {
+            
             $user->assign($role);
+            Bouncer::assign($role)->to($user->id);
         }
 
         return redirect()->route('admin.users.index');
@@ -96,13 +98,16 @@ class UsersController extends Controller
         }
         $user = User::findOrFail($id);
         $user->update($request->all());
+        $tempArr = [];
+        array_push($tempArr, $id);
         foreach ($user->roles as $role) {
             $user->retract($role);
         }
         foreach ($request->input('roles') as $role) {
-            $user->assign($role);
-        }
 
+            $user->assign($role);
+            Bouncer::assign($role)->to($id);
+        }
         return redirect()->route('admin.users.index');
     }
 

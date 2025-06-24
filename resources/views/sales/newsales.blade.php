@@ -41,8 +41,6 @@
                 </div>
                 <div class="panel-body">
                   <div class="btn-group">
-                    <button type="button" class="btn btn-info btn-search-calculator "><i class="fa fa-calculator"></i> F6 -  Calculator</button>
-                      <button type="button" class="btn btn-warning   btn-discount"><i class="fa fa-money"></i>  F8 -  Discount</button>
                         <button type="button" class="btn btn-primary btn-sales-coupon-add  "><i class="fa fa-tags"></i> F9 -  Coupon</button>
                       <button type="button" class="btn btn-danger btn-cancel-sales  "><i class="fa fa-ban"></i> F10 - Cancel Sales</button>
                     </div>
