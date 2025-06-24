@@ -107,9 +107,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
  Route::middleware(['auth', 'cashier'])->group(function () {
 
     Route::get('admin/sales/new', [SalesController::class, 'newSales']);
-    Route::post('admin/sales/products-json-items', [ProductListController::class, 'showProductListViaJSON']);
     Route::post('admin/sales/pos', [SalesController::class, 'addSalesItem']);
-    Route::post('admin/sales/cart-items', [SalesController::class, 'showCurrentSales']);
     Route::post('admin/sales/clear-sales', [SalesController::class, 'clearSales']);
+    Route::post('admin/sales/add-coupon', [SalesController::class, 'addCoupon']);
+    Route::post('admin/sales/purge-coupon', [SalesController::class, 'purgeCoupon']);
+    Route::post('admin/sales/cart-items', [SalesController::class, 'showCurrentSales']);
+   	Route::post('admin/sales/add-payment', [SalesController::class, 'payTransaction']);
+   	Route::post('admin/sales/save-transaction', [SalesController::class, 'saveTransaction']);
+   	Route::post('admin/sales/submit-coupon', [SalesController::class, 'submitCouponCode']);
+    Route::post('admin/sales/products-json-items', [ProductListController::class, 'showProductListViaJSON']);
 
 });
