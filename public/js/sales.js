@@ -365,12 +365,16 @@ function payTransaction(){
 
 function autofocus_barcodefield(){
 
-	setInterval(function(){
-		if($(document).find('.bootbox-body').length > 0 || $('.searchItem').is(":focus")){
-		}else{
-			$('.barcode-item').focus();
-		}
-	},1000);
+	const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone|Opera Mini/i.test(navigator.userAgent);
+
+	if(!isMobile){
+		setInterval(function(){
+			if($(document).find('.bootbox-body').length > 0 || $('.searchItem').is(":focus")){
+			}else{
+				$('.barcode-item').focus();
+			}
+		},1000);
+	}
 }
 
 //Shortcut Keys!

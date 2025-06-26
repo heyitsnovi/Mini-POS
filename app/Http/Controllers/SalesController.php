@@ -185,14 +185,12 @@ class SalesController extends Controller{
 		public function payTransaction(Request $req){
 
 				$tx_count = DB::table('transactions')
-				    ->whereDate('transaction_date', '2025-06-24')
+				    ->whereDate('transaction_date', date('Y-m-d'))
 				    ->count();
 
-				$order_id = date('m-d').'-'. sprintf("%04d",( $tx_count)+1);;
+				$new_order_id = date('m-d').'-'. sprintf("%04d",( $tx_count)+1);
 
-
-
-				return view('sales.paytransaction',['amount_payable'=>\Cart::getTotal(),'order_id'=>$order_id]);
+				return view('sales.paytransaction',['amount_payable'=>\Cart::getTotal(),'order_id'=>$new_order_id]);
 		}
 
 		public function saveTransaction(Request $req){
