@@ -58,7 +58,8 @@ $('.btn-show-reports').on('click',function(){
 				end_date:   $('.end_report_date').val(),
 				_token: $(document).find('meta[name="csrf-token"]').attr('content')
 			},success:function(response){
-				 var res = JSON.parse(response);
+				 
+				 var res =  response;
 				 var tpl = '';
 				 var totalSales = 0;
 

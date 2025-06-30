@@ -64,10 +64,6 @@ class ReportsController extends Controller{
 
 	public function transactionsReport(Request $req){
 
-		$from = date('Y-m-d');
-		
-		$to =  	date('Y-m-d');
-
 		$default_report = DB::table('transactions')->orderBy('transaction_date','desc');
 
 		return view('reports.customer-transactions',['custom_js'=>['chartjs.js','transaction-reports.js'],'default_report'=>$default_report->get()]);
@@ -76,29 +72,36 @@ class ReportsController extends Controller{
 
 	public function salesReportFilterDate(Request $req){
 
-	$from = $req->input('start_date');
+	    $from = $req->input('start_date');
+	    $to = $req->input('end_date');
 
-	$to = $req->input('end_date');
+	    $query = DB::table('transactions')
+	        ->join('order_log', 'order_log.transaction_id', '=', 'transactions.transaction_log_id')
+	        ->join('product_list', 'product_list.product_code', '=', 'order_log.product_code');
 
-	$filtered_dates_reports  = null;
+	    if (!empty($from) && !empty($to)) {
+	        $query->whereBetween('transaction_date', [$from, $to]);
+	    }
 
-	if($from=='' && $to==''){
-	$filtered_dates_reports =  DB::table('transactions')
-								    ->join('order_log', 'order_log.transaction_id', '=', 'transactions.transaction_log_id')
-								    ->join('product_list', 'product_list.product_code', '=', 'order_log.product_code')
-								->orderBy('transaction_date','ASC');
-	}else{
-	$filtered_dates_reports =  DB::table('transactions')
-								    ->join('order_log', 'order_log.transaction_id', '=', 'transactions.transaction_log_id')
-								    ->join('product_list', 'product_list.product_code', '=', 'order_log.product_code')
-								->whereBetween('transaction_date', [$from, $to])
-								->orderBy('transaction_date','ASC');		
+	    $filtered_dates_reports = $query->orderBy('transaction_date', 'ASC')->get();
+
+	    $totalSales = DB::table('transactions')
+	        ->join('order_log', 'order_log.transaction_id', '=', 'transactions.transaction_log_id')
+	        ->join('product_list', 'product_list.product_code', '=', 'order_log.product_code');
+
+	    if (!empty($from) && !empty($to)) {
+	        $totalSales->whereBetween('transaction_date', [$from, $to]);
+	    }
+
+	    $total = $totalSales->select(DB::raw('SUM(product_list.product_price * order_log.product_qty_ordered) as total'))
+	                        ->value('total');
+
+	    return response()->json([
+	        'results' => $filtered_dates_reports,
+	        'total_sales' => $total ?? 0 
+	    ]);
 	}
-	
 
-	echo json_encode(['results'=>$filtered_dates_reports->get()]);
-	
-	}
 
 
 	public function customerReportFilterDate(Request $req){
