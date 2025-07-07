@@ -99,6 +99,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('admin/supplier/add-supplier', [SuppliersController::class, 'saveNewSupplier']);
     Route::post('admin/product/upload-image', [ProductOperationController::class, 'uploadProductImage']);
     Route::post('admin/utils/generate-db-backup', [UtilsController::class, 'generateBackUp']);
+    Route::post('admin/ajax/product-list',[ProductOperationController::class,'ajaxProductList']);
 });
 
  
@@ -116,5 +117,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
    	Route::post('admin/sales/save-transaction', [SalesController::class, 'saveTransaction']);
    	Route::post('admin/sales/submit-coupon', [SalesController::class, 'submitCouponCode']);
     Route::post('admin/sales/products-json-items', [ProductListController::class, 'showProductListViaJSON']);
+    Route::post('admin/ajax/product-list',[ProductOperationController::class,'ajaxProductList']);
 
 });

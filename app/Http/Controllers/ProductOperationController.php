@@ -16,6 +16,84 @@ class ProductOperationController extends Controller{
     }
 
 
+    public function ajaxProductList(Request $req){
+
+
+      $start = $req->input('start') ?? 0;
+      $length = $req->input('length') ?? 10;
+      $search = $req->input('search')['value'] ?? '';
+      $orderColumn = $req->input('order')[0]['column'] ?? 0;
+      $orderDir = $req->input('order')[0]['dir'] ?? 'desc';
+
+      // Define the columns for ordering
+      $columns = ['product_name', 'category_name', 'supplier_name', 'product_price'];
+
+      // Base query with joins
+      $query = DB::table('product_list')
+          ->join('product_category', 'product_list.category_id', '=', 'product_category.category_id')
+          ->leftJoin('suppliers', 'product_list.product_supplier', '=', 'suppliers.supplier_id')
+          ->select(
+              'product_list.*',
+              'product_category.category_name',
+              'suppliers.supplier_name'
+          );
+
+      // Search functionality
+      if (!empty($search)) {
+          $query->where(function ($q) use ($search) {
+              $q->where('product_list.product_name', 'LIKE', "%{$search}%")
+                ->orWhere('product_category.category_name', 'LIKE', "%{$search}%")
+                ->orWhere('suppliers.supplier_name', 'LIKE', "%{$search}%");
+          });
+      }
+
+      // Ordering
+      if (!empty($orderColumn) && isset($columns[$orderColumn])) {
+          $query->orderBy($columns[$orderColumn], $orderDir);
+      }
+
+      // Get total and filtered record counts
+      $totalRecords = DB::table('product_list')->count(); // total without filters
+      $filteredRecords = $query->count(); // with filters
+
+      // Pagination
+      $products = $query->skip($start)->take($length)->get();
+
+      // Format data
+      $data = [];
+      foreach ($products as $product) {
+          $data[] = [
+              'product_code' => $product->product_code,
+              'product_name' => $product->product_name,
+              'stock'=>$product->stock_onhand,
+              'product_price' => $product->product_price,
+              'supplier' => $product->supplier_name,
+              'product_category' => $product->category_name,
+              'product_status' => $product->stock_onhand,
+              'restock'=>$product->restock_count,
+               'product_wholesale_price' => $product->wholesale_price,
+              'actions' => '<div class="dropdown">
+                                                      <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Options
+                                                      <span class="caret"></span></button>
+                                                      <ul class="dropdown-menu">
+                                                        <li><a href="/admin/product/update/'.$product->product_code.'">Update</a></li>
+                                                      </ul>
+                                                </div> '
+          ];
+      }
+
+      // Return JSON response
+      echo json_encode([
+          'draw' => $req->input('draw'),
+          'recordsTotal' => $totalRecords,
+          'recordsFiltered' => $filteredRecords,
+          'data' => $data,
+      ]);
+
+
+    }
+
+
     public function saveProduct(Request $req){
 
     	$post_status_container = [];

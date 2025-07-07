@@ -7,7 +7,7 @@
 	    <div class="box box-success">
 	        <div class="box-header with-border">
 	            <h3 class="box-title">
-	                <i class="fa fa-line-chart"></i> Today's Current Sales 
+	                <i class="fa fa-line-chart"></i> Today's  Sales 
 	            </h3>
 	        </div>
 	        <div class="box-body text-center">
@@ -42,7 +42,7 @@
         <div class="col-md-6">
             <div class="box box-warning">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fa fa-line-chart"></i> Yesterday's Current Sales </h3>
+                    <h3 class="box-title"><i class="fa fa-line-chart"></i> Yesterday's  Sales </h3>
                 </div>
                 <div class="box-body text-center">
                     <h2 class="text-orange" style="font-size: 2.5rem; font-weight: bold;">

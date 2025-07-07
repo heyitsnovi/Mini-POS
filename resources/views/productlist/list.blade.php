@@ -50,38 +50,7 @@
                                         </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($productlist as $list)
-                                    @php
-                                        $class_stock_on_hand = '';
-
-                                        if((int)$list->stock_onhand<=0){
-                                            $class_stock_on_hand = 'danger';
-                                        }else if((int)$list->stock_onhand<=(int)$list->restock_count){
-                                             $class_stock_on_hand = 'warning';
-                                    }
-                                    @endphp
-                                        <tr  class="{{$class_stock_on_hand }}">
-                                            <td>{{$list->product_code}}</td>
-                                            <td><a href="">{{$list->product_name}}</a></td>
-                                            <td >{{$list->stock_onhand}}</td>
-                                            <td>{{number_format($list->product_price,2)}}</td>
-                                            <td>{{number_format($list->wholesale_price,2)}}</td>
-                                            <td>{{$list->supplier_name!==NULL ? $list->supplier_name : 'Unspecified'}}</td>
-                                            <td>{{$list->category_name}}</td>
-                                            <td>{{$list->stock_onhand>=1 ? 'Available' : 'Out of stock'}}</td>
-                                            <td>{{$list->restock_count}}</td>
-                                            <td>
-                                                <div class="dropdown">
-                                                      <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">Options
-                                                      <span class="caret"></span></button>
-                                                      <ul class="dropdown-menu">
-                                                        <li><a href="#">View</a></li>
-                                                        <li><a href="/admin/product/update/{{$list->product_code}}">Update</a></li>
-                                                      </ul>
-                                                </div>           
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                           
                                 </tbody>
                         </table>
                     </div>

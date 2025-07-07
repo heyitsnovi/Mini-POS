@@ -9,9 +9,7 @@ use Auth;
 class PrintController extends Controller{
 
 	public function test(Request $req){
-		$mpdf = new \Mpdf\Mpdf(['format' => [100, 125]]);
-		$mpdf->writeHTML('<h1>test</h1>');
-		$mpdf->Output();
+ 		
 	}
 
 	public function printReceipt($transaction_id){
@@ -23,7 +21,11 @@ class PrintController extends Controller{
 
 		$customer_info = DB::table('transactions')->where('transaction_log_id','=',$transaction_id)->first();
 
-		$str.='<html><head><title>Order Details</title></head><body>';
+		$str.='<html>
+		<head>
+		<title>Order Details</title>
+		</head>
+		<body>';
 		$str.='
 			<style>
 			body{
@@ -65,8 +67,8 @@ class PrintController extends Controller{
 
 	 	$total_payable = 0;
 
-
 		foreach($orders as $order){
+			
 			$itemcount++;
 			
 			$total_payable+=($order->product_price * $order->product_qty_ordered);
@@ -82,7 +84,7 @@ class PrintController extends Controller{
 		$str.='</table></div>
 				------------------------------------------------------- 
 				<br>
-					<div style="font-size:11px;">Total # of item(s):'.$itemcount.'</div>
+				<div style="font-size:11px;">Total # of item(s):'.$itemcount.'</div>
 				-------------------------------------------------------
 				<div style="font-size:11px;">Total Amount Payable: '.number_format($total_payable,2).'</div>
 				-------------------------------------------------------
@@ -90,8 +92,8 @@ class PrintController extends Controller{
 				-------------------------------------------------------
 				<div style="font-size:11px;">Change: '.number_format(($customer_info->amount_tendered - $total_payable),2).'</div>
 				-------------------------------------------------------
-				<div style="text-align:center; font-size:12px;">******* Not valid as official receipt *******</div>
-			</body>
+				<div style="text-align:center; font-size:12px;"> ******* Not valid as official receipt ******* </div>
+				</body>
 			</html>';
 
 		$mpdf = new \Mpdf\Mpdf(['format' => [100, 125]]);
