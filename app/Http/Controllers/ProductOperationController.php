@@ -25,10 +25,8 @@ class ProductOperationController extends Controller{
       $orderColumn = $req->input('order')[0]['column'] ?? 0;
       $orderDir = $req->input('order')[0]['dir'] ?? 'desc';
 
-      // Define the columns for ordering
       $columns = ['product_name', 'category_name', 'supplier_name', 'product_price'];
 
-      // Base query with joins
       $query = DB::table('product_list')
           ->join('product_category', 'product_list.category_id', '=', 'product_category.category_id')
           ->leftJoin('suppliers', 'product_list.product_supplier', '=', 'suppliers.supplier_id')
@@ -38,7 +36,7 @@ class ProductOperationController extends Controller{
               'suppliers.supplier_name'
           );
 
-      // Search functionality
+
       if (!empty($search)) {
           $query->where(function ($q) use ($search) {
               $q->where('product_list.product_name', 'LIKE', "%{$search}%")
@@ -47,19 +45,18 @@ class ProductOperationController extends Controller{
           });
       }
 
-      // Ordering
+
       if (!empty($orderColumn) && isset($columns[$orderColumn])) {
           $query->orderBy($columns[$orderColumn], $orderDir);
       }
 
-      // Get total and filtered record counts
-      $totalRecords = DB::table('product_list')->count(); // total without filters
-      $filteredRecords = $query->count(); // with filters
 
-      // Pagination
+      $totalRecords = DB::table('product_list')->count();
+      $filteredRecords = $query->count();
+
+
       $products = $query->skip($start)->take($length)->get();
 
-      // Format data
       $data = [];
       foreach ($products as $product) {
           $data[] = [
@@ -82,8 +79,8 @@ class ProductOperationController extends Controller{
           ];
       }
 
-      // Return JSON response
-      echo json_encode([
+ 
+      return response()->json([
           'draw' => $req->input('draw'),
           'recordsTotal' => $totalRecords,
           'recordsFiltered' => $filteredRecords,
