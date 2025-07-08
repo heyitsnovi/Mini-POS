@@ -64,9 +64,9 @@ class ProductOperationController extends Controller{
               'product_name' => $product->product_name,
               'stock'=>$product->stock_onhand,
               'product_price' => $product->product_price,
-              'supplier' => $product->supplier_name,
+              'supplier' => $product->supplier_name!==NULL ? $product->supplier_name : 'Unspecified',
               'product_category' => $product->category_name,
-              'product_status' => $product->stock_onhand,
+              'product_status' => $product->stock_onhand >=1 ? 'Available' : 'Out of stock',
               'restock'=>$product->restock_count,
                'product_wholesale_price' => $product->wholesale_price,
               'actions' => '<div class="dropdown">

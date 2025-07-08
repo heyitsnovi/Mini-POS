@@ -47,7 +47,7 @@ $('.table-productlist').DataTable({
             { data: 'supplier', title: 'Supplier' },
             { data: 'product_category', title: 'Product Category' },
             { data: 'product_status', title: 'Product Status' },
-            { data: 'restock', title: 'Restock' },
+           // { data: 'restock', title: 'Restock' },
             { data: 'product_wholesale_price', title: 'Product Wholesale Price' },
             { data: 'actions', title: 'Actions', orderable: false, searchable: false },
         ],

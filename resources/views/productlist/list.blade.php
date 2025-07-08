@@ -45,7 +45,6 @@
                                             <th>Supplier</th>
                                             <th>Product Category</th>
                                             <th>Product Status</th>
-                                            <th>Restock</th>
                                             <th>Actions</th>
                                         </tr>
                                 </thead>
