@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <title>
-    MINI POS
+  <?= getStoreSettings('store_name') ?> - MINI POS
 </title>
 
 <meta http-equiv="X-UA-Compatible"

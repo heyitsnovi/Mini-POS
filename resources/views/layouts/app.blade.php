@@ -6,7 +6,7 @@
 </head>
 
 
-<body class="hold-transition skin-green sidebar-mini">
+<body class="hold-transition  <?= getStoreSettings('theme') ?> sidebar-mini">
 
 <div id="wrapper">
 

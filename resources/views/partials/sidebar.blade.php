@@ -22,7 +22,7 @@
             <li class="{{ $request->segment(1) == 'home' ? 'active' : '' }}">
                 <a href="{{ url('/') }}">
                     <i class="fa fa-dashboard"></i>
-                    <span class="title">MINI POS Dashboard</span>
+                    <span class="title">Dashboard</span>
                 </a>
             </li>
                 

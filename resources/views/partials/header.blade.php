@@ -3,7 +3,7 @@
         <div class="navbar-header">
             <a href="{{ url('/admin/home') }}"
                class="navbar-brand">
-                MINI POS
+               <?= getStoreSettings('store_name') ?>
             </a>
         </div>
         <a href="javascript:;"

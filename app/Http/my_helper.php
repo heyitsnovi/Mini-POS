@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Support\Facades\File;
 
 function getSupplierDetails($supplier_id){
 	
@@ -8,4 +8,21 @@ function getSupplierDetails($supplier_id){
 	}else{
 		return 'Unspecified';
 	}
+}
+
+function getStoreSettings($key){
+
+	$jsonPath = base_path('store-settings.json');
+
+	   if (File::exists($jsonPath)) {
+	        $data = json_decode(File::get($jsonPath), true);
+	    } else {
+	        $data = [
+	            'store_name' => '',
+	            'contact_number' => '',
+	            'address' => ''
+	        ];
+	    }
+
+	    return $data[$key];
 }

@@ -16,7 +16,7 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\UtilsController;
-
+use App\Http\Controllers\SettingsController;
 
 
 Route::get('/', function () { return redirect('/admin/home'); });
@@ -72,6 +72,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/product/suppliers/view/{supplier_id}', [SuppliersController::class, 'viewSupplier']);
     Route::get('admin/utils/database-backups', [UtilsController::class, 'backUpList']);
     Route::get('admin/sales/daily', [ReportsController::class, 'dailySales']);
+    Route::get('admin/utils/store-settings', [SettingsController::class, 'settingsPage']);
 
     // POST Routes
     Route::post('admin/sales/pos', [SalesController::class, 'addSalesItem']);
@@ -100,6 +101,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('admin/product/upload-image', [ProductOperationController::class, 'uploadProductImage']);
     Route::post('admin/utils/generate-db-backup', [UtilsController::class, 'generateBackUp']);
     Route::post('admin/ajax/product-list',[ProductOperationController::class,'ajaxProductList']);
+    Route::post('admin/utils/store-settings/save',[SettingsController::class,'saveStoreSettings']);
+
 });
 
  

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use DB;
 use Validator;
 use Auth;
+use Illuminate\Support\Facades\File;
+
 class PrintController extends Controller{
 
 	public function test(Request $req){
@@ -13,6 +15,20 @@ class PrintController extends Controller{
 	}
 
 	public function printReceipt($transaction_id){
+
+		 $jsonPath = base_path('store-settings.json');
+
+		   if (File::exists($jsonPath)) {
+		        $data = json_decode(File::get($jsonPath), true);
+		    } else {
+		        $data = [
+		            'store_name' => '',
+		            'contact_number' => '',
+		            'address' => ''
+		        ];
+		    }
+		
+
 		$str = '';
 
 		$orders = DB::table('order_log')
@@ -41,9 +57,9 @@ class PrintController extends Controller{
 			
 	 	$str.='
 	 	<div style="text-align:center;">
-		 	<h3>V.A. Hollowblocks & Construction Supplies</h3>
-		 	<div style="font-size:11px;  margin-top:-120px;">Purok 2 Pondol Loon Bohol </div>
-		 	<div style="font-size:11px;">Phone No: 09985367946</div>
+		 	<h3>'.$data['store_name'].'</h3>
+		 	<div style="font-size:11px;  margin-top:-120px;">'.$data['address'].' </div>
+		 	<div style="font-size:11px;">Phone No: '.$data['contact_number'].'</div>
 	 	</div>
 	 	<div>
 	 	 	<br>
@@ -55,7 +71,7 @@ class PrintController extends Controller{
 	 	</div>
 	 	<div style="text-align:center; margin-bottom:10px; font-weight:bold;">ORDER DETAILS</div>
 
-	 	<table border="1">
+	 	<table border="1" style="width:100%;">
 	 	<tr class="dotted">
 	 			<td>Item Name</td>
 	 			<td style="text-align:center;">Price</td>
