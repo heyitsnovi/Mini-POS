@@ -51,6 +51,7 @@
 	                				<td>Transaction Date</td>
 	                				<td>Customer Name</td>
 	                				<td>Payment Type</td>
+	                				<td>Amount Paid</td>
 	                				<td>Actions</td>
 	                			</tr>
 	                		</thead>
@@ -65,9 +66,14 @@
 	         					<td>{{$sales->transaction_date}}</td>
 	         					<td>{{$sales->customer_info}}</td>
 	         					<td>{{$sales->payment_type}}</td>
+	         					<td>{{ number_format(getTransactionTotal($sales->transaction_log_id),2) }}</td>
 	         					<td>
 	         						<a data-ornumber="{{$sales->transaction_or_number}}" class="btn btn-success btn-sm btn-view-transaction"><i class="fa fa-eye"></i> View</a>
+
 	         						<a target="_blank" href="{{url('admin/sales/print-transaction/code')}}/{{$sales->transaction_log_id}}" data-logid="{{$sales->transaction_log_id}}" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Receipt </a>
+
+	         						<a data-ornumber="{{$sales->transaction_log_id}}" class="btn btn-danger btn-sm btn-cancel-sales"><i class="fa fa-ban"></i> Cancel</a>
+	         						
 	         					</td>
 	         				</tr>
 	         			@endforeach

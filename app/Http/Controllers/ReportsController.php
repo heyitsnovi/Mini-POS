@@ -118,8 +118,24 @@ class ReportsController extends Controller{
 												->orderBy('transaction_date','ASC');
 		}
 
-		echo json_encode(['results'=>$filtered_dates_reports->get()]);
+		//
 
+		$items_filtered = [];
+
+		foreach($filtered_dates_reports->get() as $filtered_reports){
+
+				array_push($items_filtered, [
+					'transaction_log_id'=>$filtered_reports->transaction_log_id,
+					'amount_tendered'=>$filtered_reports->amount_tendered,
+					'transaction_date'=>$filtered_reports->transaction_date,
+					'payment_type'=>$filtered_reports->payment_type,
+					'customer_info'=>$filtered_reports->customer_info,
+					'transaction_or_number'=>$filtered_reports->transaction_or_number,
+					'amount_paid'=>number_format(getTransactionTotal($filtered_reports->transaction_log_id),2)
+				]);
+		}
+
+		echo json_encode(['results'=>$items_filtered]);
 	}
 
 

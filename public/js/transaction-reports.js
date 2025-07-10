@@ -94,7 +94,8 @@ $('.btn-show-transactions-reports').on('click',function(){
          					 tpl +='<td>'+res.results[i].transaction_date+'</td>';
          					 tpl +='<td>'+res.results[i].customer_info+'</td>';
          					 tpl +='<td>'+res.results[i].payment_type+'</td>';
-         					 tpl +='<td><a class="btn btn-success btn-sm btn-view-transaction" data-ornumber="'+res.results[i].transaction_or_number+'"><i class="fa fa-eye"></i> View</a> <a target="_blank" href="/admin/sales/print-transaction/code/'+res.results[i].transaction_log_id+'" data-logid="'+res.results[i].transaction_log_id+'" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Receipt </a></td>';
+         					 tpl +='<td>'+res.results[i].amount_paid+'</td>';
+         					 tpl +='<td><a class="btn btn-success btn-sm btn-view-transaction" data-ornumber="'+res.results[i].transaction_or_number+'"><i class="fa fa-eye"></i> View</a> <a target="_blank" href="/admin/sales/print-transaction/code/'+res.results[i].transaction_log_id+'" data-logid="'+res.results[i].transaction_log_id+'" class="btn btn-primary btn-sm btn-cancel-sales"><i class="fa fa-print"></i> Receipt </a> <a data-ornumber="'+res.results[i].transaction_log_id+'" class="btn btn-danger btn-sm btn-void-transaction"><i class="fa fa-ban"></i> Cancel</a> </td>';
 	         				 tpl +='</tr>';
 				 }
 
@@ -116,5 +117,13 @@ $('.btn-show-transactions-reports').on('click',function(){
 					toastr["error"]("No reports based on selected dates");
 				}
 			}
-		})
+		});
+
+
+});
+
+
+$(document).on('click','.btn-cancel-sales',function(){
+
+		
 });

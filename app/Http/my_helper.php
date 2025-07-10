@@ -10,6 +10,24 @@ function getSupplierDetails($supplier_id){
 	}
 }
 
+
+function getTransactionTotal($transaction_id){
+
+	$transaction_orders  = \DB::table('order_log')
+    ->join('product_list', 'product_list.product_code', '=', 'order_log.product_code')
+    ->where('transaction_id', $transaction_id)
+    ->get();
+
+    $sum = 0;
+
+    foreach($transaction_orders as $tx_orders){
+
+    		$sum+=($tx_orders->product_price * $tx_orders->product_qty_ordered); 
+    }
+
+    return $sum;
+}
+
 function getStoreSettings($key){
 
 	$jsonPath = base_path('store-settings.json');

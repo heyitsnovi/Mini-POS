@@ -14,10 +14,13 @@
                 </div>
                 <div class="box-body">
 
-                        <button  class="btn btn-primary btn-md btn-saveproduct pull-right " type="button">
+                        <div class="clearfix">
+                            <button  class="btn btn-primary btn-md btn-saveproduct pull-right " type="button">
                             <i class="fa fa-save"></i>  &nbsp;
                                  Save Product
                         </button>
+                        </div>
+
  
                     <div class="row">
                           
