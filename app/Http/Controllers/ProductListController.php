@@ -112,7 +112,16 @@ class ProductListController extends Controller{
                 ->orderBy('product_id', 'DESC')
                 ->first();
 
-        $barcode_id =  sprintf("%04d",( $last_id->product_id)+1);
+        $barcode_id = 0;
+
+        if(is_null($last_id)){
+
+             $barcode_id =  sprintf("%04d",( $barcode_id)+1);
+        }else{
+            
+            $barcode_id =  sprintf("%04d",( $last_id->product_id)+1);
+        }
+        
 
     	return view('productlist.add',
     		[
