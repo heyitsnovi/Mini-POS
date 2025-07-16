@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use DB;
 use Validator;
 use Carbon\Carbon;
-
+use Auth;
 class ReportsController extends Controller{
 
 
@@ -64,79 +64,215 @@ class ReportsController extends Controller{
 
 	public function transactionsReport(Request $req){
 
-		$default_report = DB::table('transactions')->orderBy('transaction_date','desc');
-
-		return view('reports.customer-transactions',['custom_js'=>['chartjs.js','transaction-reports.js'],'default_report'=>$default_report->get()]);
+		return view('reports.customer-transactions',['custom_js'=>['chartjs.js','transaction-reports.js']]);
 
 	}
 
-	public function salesReportFilterDate(Request $req){
+public function salesReportFilterDate(Request $req){
 
-	    $from = $req->input('start_date');
-	    $to = $req->input('end_date');
+    $start = $req->input('start') ?? 0;
+    $length = $req->input('length') ?? 10;
+    $search = $req->input('search')['value'] ?? '';
+    $orderColumn = $req->input('order')[0]['column'] ?? 0;
+    $orderDir = $req->input('order')[0]['dir'] ?? 'asc';
+    $from = $req->input('start_date');
+    $to = $req->input('end_date');
 
-	    $query = DB::table('transactions')
-	        ->join('order_log', 'order_log.transaction_id', '=', 'transactions.transaction_log_id')
-	        ->join('product_list', 'product_list.product_code', '=', 'order_log.product_code');
+	if ($from === '__USE_EARLIEST__') {
+    // Get the earliest transaction_date
+    	$from = DB::table('transactions')->min('transaction_date');
+	}
 
-	    if (!empty($from) && !empty($to)) {
-	        $query->whereBetween('transaction_date', [$from, $to]);
-	    }
+    // Define columns for ordering
+    $columns = [
+        'transactions.transaction_date',
+        'transactions.transaction_log_id',
+        'product_list.product_name',
+        'order_log.product_qty_ordered',
+        'product_list.product_price'
+    ];
 
-	    $filtered_dates_reports = $query->orderBy('transaction_date', 'ASC')->get();
+    // Base query
+    $query = DB::table('transactions')
+        ->join('order_log', 'order_log.transaction_id', '=', 'transactions.transaction_log_id')
+        ->join('product_list', 'product_list.product_code', '=', 'order_log.product_code')
+        ->select(
+            'transactions.transaction_date',
+            'transactions.transaction_log_id',
+            'product_list.product_name',
+            'order_log.product_qty_ordered',
+            'product_list.product_price',
+            'order_log.product_code',
+            'transactions.transaction_or_number',
+            DB::raw('(product_list.product_price * order_log.product_qty_ordered) as subtotal')
+        );
 
-	    $totalSales = DB::table('transactions')
-	        ->join('order_log', 'order_log.transaction_id', '=', 'transactions.transaction_log_id')
-	        ->join('product_list', 'product_list.product_code', '=', 'order_log.product_code');
+    // Date filtering
+    if (!empty($from) && !empty($to)) {
+        $query->whereBetween('transactions.transaction_date', [$from, $to]);
+    }
 
-	    if (!empty($from) && !empty($to)) {
-	        $totalSales->whereBetween('transaction_date', [$from, $to]);
-	    }
+    // Search
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('product_list.product_name', 'LIKE', "%{$search}%")
+              ->orWhere('transactions.transaction_log_id', 'LIKE', "%{$search}%");
+        });
+    }
 
-	    $total = $totalSales->select(DB::raw('SUM(product_list.product_price * order_log.product_qty_ordered) as total'))
-	                        ->value('total');
+    // Ordering
+    if (isset($columns[$orderColumn])) {
+        $query->orderBy($columns[$orderColumn], $orderDir);
+    }
 
-	    return response()->json([
-	        'results' => $filtered_dates_reports,
-	        'total_sales' => $total ?? 0 
-	    ]);
+    // Get counts
+    $filteredRecords = $query->count();
+
+    $results = $query->skip($start)->take($length)->get();
+
+    // Compute total sales (filtered)
+    $totalSalesQuery = DB::table('transactions')
+        ->join('order_log', 'order_log.transaction_id', '=', 'transactions.transaction_log_id')
+        ->join('product_list', 'product_list.product_code', '=', 'order_log.product_code');
+
+    if (!empty($from) && !empty($to)) {
+        $totalSalesQuery->whereBetween('transactions.transaction_date', [$from, $to]);
+    }
+
+    if (!empty($search)) {
+        $totalSalesQuery->where(function ($q) use ($search) {
+            $q->where('product_list.product_name', 'LIKE', "%{$search}%")
+              ->orWhere('transactions.transaction_log_id', 'LIKE', "%{$search}%");
+        });
+    }
+
+    $totalSales = $totalSalesQuery
+        ->select(DB::raw('SUM(product_list.product_price * order_log.product_qty_ordered) as total'))
+        ->value('total');
+
+    // Format data for DataTables
+    $data = [];
+    foreach ($results as $row) {
+        $data[] = [
+            'transaction_date' => $row->transaction_date,
+            'transaction_id' => $row->transaction_log_id,
+            'item_name' => $row->product_name,
+            'quantity' => $row->product_qty_ordered,
+            'price' => number_format($row->product_price, 2),
+            'total' => number_format($row->subtotal, 2),
+            'product_code'=>$row->product_code,
+            'assigned_or'=>$row->transaction_or_number,
+            'date_sold'=>$row->transaction_date,
+
+        ];
+    }
+
+    // Get full total records without filters
+    $totalRecords = DB::table('transactions')->count();
+
+    return response()->json([
+        'draw' => intval($req->input('draw')),
+        'recordsTotal' => $totalRecords,
+        'recordsFiltered' => $filteredRecords,
+        'data' => $data,
+        'total_sales' => number_format($totalSales ?? 0, 2),
+        'current_username'=>Auth::user()->name
+    ]);
+}
+
+
+
+
+public function customerReportFilterDate(Request $req){
+
+    $start = $req->input('start') ?? 0;
+    $length = $req->input('length') ?? 10;
+    $search = $req->input('search')['value'] ?? '';
+    $orderColumn = $req->input('order')[0]['column'] ?? 0;
+    $orderDir = $req->input('order')[0]['dir'] ?? 'asc';
+
+    $from = $req->input('start_date');
+    $to = $req->input('end_date');
+
+
+
+   if ($from === '__USE_EARLIEST__') {
+    // Get the earliest transaction_date
+    	$from = DB::table('transactions')->min('transaction_date');
 	}
 
 
+	$totalRecords = DB::table('transactions')->count();
 
-	public function customerReportFilterDate(Request $req){
+    $query = DB::table('transactions');
 
-		$from = $req->input('start_date');
-		$to = $req->input('end_date');
-		$filtered_dates_reports = null;
+    if (!empty($from) && !empty($to)) {
+        $query->whereBetween('transaction_date', [$from, $to]);
+    }
 
-		if($from =='' && $to ==''){
-		$filtered_dates_reports = DB::table('transactions')
-												->orderBy('transaction_date','ASC');
-		}else{
-		$filtered_dates_reports = DB::table('transactions')->whereBetween('transaction_date',[$from,$to])
-												->orderBy('transaction_date','ASC');
-		}
+    $query->orderBy('transaction_date', 'ASC');
 
-		//
+    $filteredRecords = $query->count();
 
-		$items_filtered = [];
+    $results =  $query->skip($start)->take($length)->get();
 
-		foreach($filtered_dates_reports->get() as $filtered_reports){
+        // Compute total sales (filtered)
+    $totalSalesQuery = DB::table('transactions')
+        ->join('order_log', 'order_log.transaction_id', '=', 'transactions.transaction_log_id')
+        ->join('product_list', 'product_list.product_code', '=', 'order_log.product_code');
 
-				array_push($items_filtered, [
-					'transaction_log_id'=>$filtered_reports->transaction_log_id,
-					'amount_tendered'=>$filtered_reports->amount_tendered,
-					'transaction_date'=>$filtered_reports->transaction_date,
-					'payment_type'=>$filtered_reports->payment_type,
-					'customer_info'=>$filtered_reports->customer_info,
-					'transaction_or_number'=>$filtered_reports->transaction_or_number,
-					'amount_paid'=>number_format(getTransactionTotal($filtered_reports->transaction_log_id),2)
-				]);
-		}
+    if (!empty($from) && !empty($to)) {
+        $totalSalesQuery->whereBetween('transactions.transaction_date', [$from, $to]);
+    }
 
-		echo json_encode(['results'=>$items_filtered]);
-	}
+    if (!empty($search)) {
+        $totalSalesQuery->where(function ($q) use ($search) {
+            $q->where('product_list.product_name', 'LIKE', "%{$search}%")
+              ->orWhere('transactions.transaction_log_id', 'LIKE', "%{$search}%");
+        });
+    }
+
+    $totalSales = $totalSalesQuery
+        ->select(DB::raw('SUM(product_list.product_price * order_log.product_qty_ordered) as total'))
+        ->value('total');
+
+
+    $data = [];
+
+    foreach ($results as $transaction) {
+        $data[] = [
+  			'payment_type'=>$transaction->payment_type,
+  			'customer_info'=>$transaction->customer_info,
+  			'date_sold'=>$transaction->transaction_date,
+  			'assigned_or'=>$transaction->transaction_or_number,
+            'amount_paid' => number_format(getTransactionTotal($transaction->transaction_log_id), 2),
+            'actions'=>'
+	         <div class="dropdown">
+			  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> Actions
+			  <span class="caret"></span></button>
+			  <ul class="dropdown-menu">
+			    <li><a style="cursor:pointer;" data-ornumber="'.$transaction->transaction_or_number.'" class=" btn-view-transaction"><i class="fa fa-eye"></i> View</a></li>
+			    <li><a target="_blank" href=" '.url('admin/sales/print-transaction/code').'/'.$transaction->transaction_log_id.' " data-logid="'.$transaction->transaction_log_id.'" class=""><i class="fa fa-print"></i> Receipt </a></li>
+			    <li><a style="cursor:pointer;" data-ornumber="'.$transaction->transaction_log_id.'" class=" btn-sm btn-cancel-sales"><i class="fa fa-ban"></i> Cancel </a></li>
+			  </ul>
+			</div>
+
+	         '
+        ];
+    }
+
+   
+
+    return response()->json([
+        'data' => $data,
+        'recordsTotal' =>$totalRecords,
+        'recordsFiltered' => $filteredRecords,
+        'draw' => intval($req->input('draw')),
+        'current_username'=>Auth::user()->name,
+        'total_sales' => number_format($totalSales ?? 0, 2),
+    ]);
+}
+
 
 
 	public function viewTransaction(Request $req){

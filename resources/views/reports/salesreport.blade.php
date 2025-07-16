@@ -41,6 +41,10 @@
 	                			<i class="fa fa-search"></i>
 	                			Show Reports
 	                		</button>
+	                		<button class="btn btn-danger btn-md btn-clear-reports-filter">
+	                			<i class="fa fa-ban"></i>
+	                			Clear Filters
+	                		</button>
                 		</div>
                 </div>
 		</div>
@@ -67,26 +71,9 @@
 	                				<td>Total</td>
 	                			</tr>
 	                		</thead>
-	                		<tbody class="tbody-results-filter">
-
- 	
-	                	@foreach($today_sales as $sales)
- 
-	         				<tr>
-	         					<td>{{$sales->product_code}}</td>
-	         					<td>{{$sales->transaction_or_number}}</td>
-	         					<td>{{$sales->transaction_date}}</td>
-	         					<td>{{$sales->product_name}}</td>
-	         					<td>{{$sales->product_qty_ordered}}</td>
-	         					<td>{{$sales->product_price}}</td>
-	         					<td>{{$sales->product_qty_ordered * $sales->product_price}}</td>
-	         				</tr>
-	         			@endforeach
-
-	                		</tbody>
+	                			<tbody></tbody>
 	                	</table>
                 	</div>
-        
                 </div>
 		</div>
 	</div>	

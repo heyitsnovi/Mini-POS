@@ -90,15 +90,15 @@
 
                       <li>
                         <a href="{{ url('admin/sales/report') }}">
-                            <i class="fa fa-info-circle"></i>
+                            <i class="fa fa-money"></i>
                             <span class="title">
-                                Purchased Products
+                                 Products Sold
                             </span>
                         </a>
                     </li>
                       <li>
                         <a href="{{ url('admin/customer-transactions/report') }}">
-                            <i class="fa fa-user"></i>
+                            <i class="fa fa-file-text-o"></i>
                             <span class="title">
                                  Customer Transactions
                             </span>

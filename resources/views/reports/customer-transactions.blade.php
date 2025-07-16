@@ -30,6 +30,11 @@
 	                			<i class="fa fa-search"></i>
 	                			Show Transactions
 	                		</button>
+
+	                	<button class="btn btn-danger btn-md btn-clear-reports-filter">
+	                			<i class="fa fa-ban"></i>
+	                			Clear Filters
+	                		</button>
                 		</div>
 
                 </div>
@@ -43,7 +48,7 @@
                 </div>
                 <div class="box-body">
                 	<div class="table-responsive tbl-result-transactions-search">
-               	             <table class="table table-condesed table-stripped table-hover tbl-customer-salesresult dt-select datatable">
+               	             <table class="table table-condesed table-stripped table-hover tbl-customer-salesresult">
 	                		<thead>
 	                			<tr>
 	         	 
@@ -56,28 +61,6 @@
 	                			</tr>
 	                		</thead>
 	                		<tbody class="tbody-transactions-results-filter">
-
- 	
-	                	@foreach($default_report as $sales)
- 
-	         				<tr>
-	         				 
-	         					<td>{{$sales->transaction_or_number}}</td>
-	         					<td>{{$sales->transaction_date}}</td>
-	         					<td>{{$sales->customer_info}}</td>
-	         					<td>{{$sales->payment_type}}</td>
-	         					<td>{{ number_format(getTransactionTotal($sales->transaction_log_id),2) }}</td>
-	         					<td>
-	         						<a data-ornumber="{{$sales->transaction_or_number}}" class="btn btn-success btn-sm btn-view-transaction"><i class="fa fa-eye"></i> View</a>
-
-	         						<a target="_blank" href="{{url('admin/sales/print-transaction/code')}}/{{$sales->transaction_log_id}}" data-logid="{{$sales->transaction_log_id}}" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Receipt </a>
-
-	         						<a data-ornumber="{{$sales->transaction_log_id}}" class="btn btn-danger btn-sm btn-cancel-sales"><i class="fa fa-ban"></i> Cancel</a>
-	         						
-	         					</td>
-	         				</tr>
-	         			@endforeach
-
 	                		</tbody>
 	                	</table>
 
