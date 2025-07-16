@@ -4,8 +4,15 @@
 <head>
     @include('partials.head')
 </head>
+<style>
+    .login-background {
+    background: url('/adminlte/img/abstract-material.jpg') no-repeat center center fixed;
+    background-size: cover;
 
-<body class="page-header-fixed">
+}
+</style>
+
+<body class="page-header-fixed login-background">
 
     <div style="margin-top: 10%;"></div>
 

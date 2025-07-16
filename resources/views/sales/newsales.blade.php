@@ -29,7 +29,7 @@
                         <li class="list-group-item coupon-code-attached"> <span class="badge coupon-code-name "></span> Coupon Code: </li>
                          <li class="list-group-item coupon-code-amount"> <span class="badge coupon-code-value"></span> Discount Amount: </li>
                       </ul>
-                        <button type="button" class="btn btn-success btn-add-payment btn-block"><i class="fa fa-money"></i> F7 -  Payment</button>
+                        
                         <code>Coupon codes are not stackable. Only 1 coupon code per transaction is allowed.</code>
                 </div>
             </div>
@@ -41,6 +41,7 @@
                 </div>
                 <div class="panel-body">
                   <div class="btn-group">
+                        <button type="button" class="btn btn-success btn-add-payment"><i class="fa fa-money"></i> F7 -  Payment</button>
                         <button type="button" class="btn btn-primary btn-sales-coupon-add  "><i class="fa fa-tags"></i> F9 -  Coupon</button>
                       <button type="button" class="btn btn-danger btn-cancel-sales  "><i class="fa fa-ban"></i> F10 - Cancel Sales</button>
                     </div>

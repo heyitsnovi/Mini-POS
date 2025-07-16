@@ -4,13 +4,13 @@
     <div class="row">
         <div class="col-md-4 col-md-offset-4">
             <div class="panel panel-info">
-                <div class="panel-heading">LimePlus POS Login</div>
+                <div class="panel-heading"><?= getStoreSettings('store_name') ?> - MINI POS </div>
                 <div class="panel-body">
                     
                     @if (count($errors) > 0)
                         <div class="alert alert-danger">
-                            <strong>Whoops!</strong> There were problems with input:
-                            <br><br>
+                            <strong>Error</strong> <br> There were problems with input:
+                            <br>
                             <ul>
                                 @foreach ($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -67,8 +67,8 @@
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit"
-                                        class="btn btn-primary"
-                                        style="margin-right: 15px;">
+                                        class="btn btn-primary btn-block"
+                                         >
                                     Login
                                 </button>
                             </div>
