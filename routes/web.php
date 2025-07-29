@@ -73,6 +73,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/utils/database-backups', [UtilsController::class, 'backUpList']);
     Route::get('admin/sales/daily', [ReportsController::class, 'dailySales']);
     Route::get('admin/utils/store-settings', [SettingsController::class, 'settingsPage']);
+    Route::get('admin/sales/report/most-purchased-items',[ReportsController::class,'getMostPurchasedItem']);
+    Route::get('admin/sales/report/filter-daily-sales',[ReportsController::class,'getDailySalesByRange']);
 
     // POST Routes
     Route::post('admin/sales/pos', [SalesController::class, 'addSalesItem']);
@@ -103,6 +105,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('admin/ajax/product-list',[ProductOperationController::class,'ajaxProductList']);
     Route::post('admin/utils/store-settings/save',[SettingsController::class,'saveStoreSettings']);
 
+
 });
 
  
@@ -111,6 +114,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
  Route::middleware(['auth', 'cashier'])->group(function () {
 
     Route::get('admin/sales/new', [SalesController::class, 'newSales']);
+    Route::get('admin/sales/report/most-purchased-items',[ReportsController::class,'getMostPurchasedItem']);
     Route::post('admin/sales/pos', [SalesController::class, 'addSalesItem']);
     Route::post('admin/sales/clear-sales', [SalesController::class, 'clearSales']);
     Route::post('admin/sales/add-coupon', [SalesController::class, 'addCoupon']);
@@ -122,4 +126,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('admin/sales/products-json-items', [ProductListController::class, 'showProductListViaJSON']);
     Route::post('admin/ajax/product-list',[ProductOperationController::class,'ajaxProductList']);
 
+
 });
+
+/* Add Extra App Routes */
+
+$folder = __DIR__ . '/ext';
+
+foreach (glob($folder . '/*.php') as $filename) {
+    require_once $filename;
+}

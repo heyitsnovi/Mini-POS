@@ -1,122 +1,149 @@
 <?php
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use DB;
 use Validator;
 use Auth;
 use Illuminate\Support\Facades\File;
 
-class PrintController extends Controller{
+class PrintController extends Controller
+{
+    public function test(Request $req)
+    {
+        //
+    }
 
-	public function test(Request $req){
- 		
-	}
+    public function printReceipt($transaction_id)
+    {
+        $jsonPath = base_path('store-settings.json');
 
-	public function printReceipt($transaction_id){
+        if (File::exists($jsonPath)) {
+            $data = json_decode(File::get($jsonPath), true);
+        } else {
+            $data = [
+                'store_name' => '',
+                'contact_number' => '',
+                'address' => ''
+            ];
+        }
 
-		 $jsonPath = base_path('store-settings.json');
+        $orders = DB::table('order_log')
+            ->join('product_list', 'order_log.product_code', '=', 'product_list.product_code')
+            ->where('transaction_id', '=', $transaction_id)
+            ->get();
 
-		   if (File::exists($jsonPath)) {
-		        $data = json_decode(File::get($jsonPath), true);
-		    } else {
-		        $data = [
-		            'store_name' => '',
-		            'contact_number' => '',
-		            'address' => ''
-		        ];
-		    }
-		
+        $customer_info = DB::table('transactions')
+            ->where('transaction_log_id', '=', $transaction_id)
+            ->first();
 
-		$str = '';
+        $itemcount = 0;
+        $total_payable = 0;
 
-		$orders = DB::table('order_log')
-					->join('product_list', 'order_log.product_code', '=', 'product_list.product_code')
-					->where('transaction_id','=',$transaction_id)->get();
+        // Start building HTML string
+        $str = '<html>
+        <head>
+        <title>Order Details</title>
+        <style>
+            body {
+                font-family: Tahoma;
+                font-size: 8pt;
+                margin: 0;
+                padding: 0;
+            }
+            h3 {
+                font-size: 10pt;
+                margin: 0;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 8pt;
+            }
+            table, th, td {
+                border: 1px solid #c9c9c9;
+                padding: 3px;
+            }
+            .center {
+                text-align: center;
+            }
+            .right {
+                text-align: right;
+            }
+            .info {
+                font-size: 8pt;
+                margin-bottom: 3px;
+            }
+            .divider {
+                text-align: center;
+                margin: 5px 0;
+            }
+        </style>
+        </head>
+        <body>';
 
-		$customer_info = DB::table('transactions')->where('transaction_log_id','=',$transaction_id)->first();
+        $str .= '
+        <div class="center">
+            <h3>' . $data['store_name'] . '</h3>
+            <div class="info">' . $data['address'] . '</div>
+            <div class="info">Phone No: ' . $data['contact_number'] . '</div>
+        </div>
 
-		$str.='<html>
-		<head>
-		<title>Order Details</title>
-		</head>
-		<body>';
-		$str.='
-			<style>
-			body{
-				font-family: Tahoma;
-			}
-			table td, table th, table tr {
-				border: 1px solid #c9c9c9 !important
-				}
-				table{
-				    border-collapse:collapse;
-				    font-size:11px;
-				}</style>';
-			
-	 	$str.='
-	 	<div style="text-align:center;">
-		 	<h3>'.$data['store_name'].'</h3>
-		 	<div style="font-size:11px;  margin-top:-120px;">'.$data['address'].' </div>
-		 	<div style="font-size:11px;">Phone No: '.$data['contact_number'].'</div>
-	 	</div>
-	 	<div>
-	 	 	<br>
-	 	<div style="font-size:11px;">Date: '.date('m/d/Y',strtotime($customer_info->created_at)).'</div>
-	 	<div style="font-size:11px;">Time: '.date('H:i:s a',strtotime($customer_info->created_at)).'</div>
-	 	<div style="font-size:11px;">Cashier: '.Auth::user()->name.'</div>
-	 	</div>
-	 	<br>
-	 	</div>
-	 	<div style="text-align:center; margin-bottom:10px; font-weight:bold;">ORDER DETAILS</div>
+        <div class="info">Date: ' . date('m/d/Y', strtotime($customer_info->created_at)) . '</div>
+        <div class="info">Time: ' . date('H:i:s a', strtotime($customer_info->created_at)) . '</div>
+        <div class="info">Cashier: ' . Auth::user()->name . '</div>
 
-	 	<table border="1" style="width:100%;">
-	 	<tr class="dotted">
-	 			<td>Item Name</td>
-	 			<td style="text-align:center;">Price</td>
-	 			<td style="text-align:center;">Qty</td>
-	 			<td style="text-align:center;">Payable</td>
-	 	</tr>';
+        <div class="divider"><strong>ORDER DETAILS</strong></div>
 
-	 	$itemcount = 0;
+        <table>
+            <tr>
+                <th>Item Name</th>
+                <th class="center">Price</th>
+                <th class="right">Qty</th>
+                <th class="right">Payable</th>
+            </tr>';
 
-	 	$total_payable = 0;
+        foreach ($orders as $order) {
+            $itemcount++;
+            $line_total = $order->product_price * $order->product_qty_ordered;
+            $total_payable += $line_total;
 
-		foreach($orders as $order){
-			
-			$itemcount++;
-			
-			$total_payable+=($order->product_price * $order->product_qty_ordered);
+            $str .= '
+            <tr>
+                <td>' . $order->product_name . '</td>
+                <td class="center">' . number_format($order->product_price, 2) . '</td>
+                <td class="right">' . $order->product_qty_ordered . '</td>
+                <td class="right">' . number_format($line_total, 2) . '</td>
+            </tr>';
+        }
 
-					$str.='<tr class="dotted">';
-					$str.='<td>'.$order->product_name.'   </td>';
-					$str.='<td style="text-align:center;">'.number_format($order->product_price,2).'</td>';
-					$str.='<td style="text-align:right;">'.$order->product_qty_ordered.'</td>';
-					$str.='<td style="text-align:right;">'.number_format(($order->product_price * $order->product_qty_ordered),2).'</td>';
- 				$str.='</tr>';
-		}
+        $change = $customer_info->amount_tendered - $total_payable;
 
-		$str.='</table></div>
-				------------------------------------------------------- 
-				<br>
-				<div style="font-size:11px;">Total # of item(s):'.$itemcount.'</div>
-				-------------------------------------------------------
-				<div style="font-size:11px;">Total Amount Payable: '.number_format($total_payable,2).'</div>
-				-------------------------------------------------------
-				<div style="font-size:11px;">Amount Tendered: '.number_format($customer_info->amount_tendered,2).'</div>
-				-------------------------------------------------------
-				<div style="font-size:11px;">Change: '.number_format(($customer_info->amount_tendered - $total_payable),2).'</div>
-				-------------------------------------------------------
-				<div style="text-align:center; font-size:12px;"> ******* Not valid as official receipt ******* </div>
-				</body>
-			</html>';
+        $str .= '</table>
+        <div class="divider">-------------------------------------------------------</div>
+        <div class="info">Total # of item(s): ' . $itemcount . '</div>
+        <div class="divider">-------------------------------------------------------</div>
+        <div class="info">Total Amount Payable: ' . number_format($total_payable, 2) . '</div>
+        <div class="divider">-------------------------------------------------------</div>
+        <div class="info">Amount Tendered: ' . number_format($customer_info->amount_tendered, 2) . '</div>
+        <div class="divider">-------------------------------------------------------</div>
+        <div class="info">Change: ' . number_format($change, 2) . '</div>
+        <div class="divider">-------------------------------------------------------</div>
+        <div class="center" style="font-size: 8pt;">******* Not valid as official receipt *******</div>
+        </body>
+        </html>';
 
-		$mpdf = new \Mpdf\Mpdf(['format' => [100, 125]]);
-		$mpdf->writeHTML($str);
-		$mpdf->Output();
+        // Generate PDF
+        $mpdf = new \Mpdf\Mpdf([
+            'format' => [105, 148.5], // 1/4 A4 in mm
+            'default_font_size' => 8,
+            'margin_top' => 5,
+            'margin_bottom' => 5,
+            'margin_left' => 5,
+            'margin_right' => 5,
+        ]);
 
-	}
+        $mpdf->WriteHTML($str);
+        $mpdf->Output(); // or ->Output('receipt.pdf', 'D') to download
+    }
 }
-
-?>

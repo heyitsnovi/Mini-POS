@@ -297,4 +297,68 @@ public function customerReportFilterDate(Request $req){
 
 	}
 
+ public function getMostPurchasedItem(Request $request){
+
+    $from = $request->input('from_date');
+    $to   = $request->input('to_date');
+    $limit = $request->input('limit');
+
+    $mostPurchased = DB::table('order_log')
+        ->select(
+            'product_list.product_name',
+            'order_log.product_code',
+            DB::raw('SUM(order_log.product_qty_ordered) as total_quantity')
+        )
+        ->join('product_list', 'order_log.product_code', '=', 'product_list.product_code')
+        ->when($from && $to, function ($query) use ($from, $to) {
+            return $query->whereBetween('order_log.created_at', [$from, $to]);
+        })
+        ->groupBy('order_log.product_code', 'product_list.product_name')
+        ->orderByDesc('total_quantity');
+       
+        if ($limit && is_numeric($limit)) {
+            $mostPurchased->limit((int) $limit);
+        }
+
+        $results = $mostPurchased->get();
+
+        return response()->json($results);
+}
+
+
+public function getDailySalesByRange(Request $request){
+
+    $from     = $request->input('from_date');
+    $to       = $request->input('to_date');
+    $limit    = $request->input('limit');
+    $sort     = strtolower($request->input('sort', 'asc')); 
+
+
+    if (!$from || !$to) {
+        $to   = Carbon::now()->toDateString();
+        $from = Carbon::now()->subDays(6)->toDateString(); 
+    }
+
+    // Validate sort direction
+    $sort = in_array($sort, ['asc', 'desc']) ? $sort : 'asc';
+
+    $query = DB::table('order_log')
+        ->join('product_list', 'order_log.product_code', '=', 'product_list.product_code')
+        ->join('transactions', 'order_log.transaction_id', '=', 'transactions.transaction_log_id')
+        ->select(
+            DB::raw('DATE(transactions.created_at) as sales_date'),
+            DB::raw('SUM(order_log.product_qty_ordered * product_list.product_price) as earnings')
+        )
+        ->whereBetween('transactions.created_at', [$from, $to])
+        ->groupBy(DB::raw('DATE(transactions.created_at)'))
+        ->orderBy('earnings', $sort); // sorting by earnings
+
+    if ($limit && is_numeric($limit)) {
+        $query->limit((int) $limit);
+    }
+
+    $results = $query->get();
+
+    return response()->json($results);
+}
 }?>

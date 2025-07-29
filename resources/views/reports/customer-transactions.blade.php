@@ -17,11 +17,11 @@
                 	
                 	 <div class="col-md-6">
                 			<label>Start Date:</label>
-                			<input type="text" name="start_report_date" class="form-control start_report_date"  />
+                			<input type="text" name="start_report_date" class="form-control start_report_date" value="<?php echo isset($_GET["start_date"]) ? $_GET['start_date'] : '' ?>"  />
                 		</div>
                 		<div class="col-md-6">
                 			<label>End Date:</label>
-                			<input type="text" name="end_report_date" class="form-control end_report_date" />
+                			<input type="text" name="end_report_date" class="form-control end_report_date"  value="<?php echo isset($_GET["end_date"]) ? $_GET['end_date'] : '' ?>" />
                 		</div>
                 		
                 		<div class="col-md-12">
