@@ -40,6 +40,8 @@ class PrintController extends Controller
         $itemcount = 0;
         $total_payable = 0;
 
+        $tx_time = new \DateTime($customer_info->created_at);
+
         // Start building HTML string
         $str = '<html>
         <head>
@@ -90,7 +92,7 @@ class PrintController extends Controller
         </div>
 
         <div class="info">Date: ' . date('m/d/Y', strtotime($customer_info->created_at)) . '</div>
-        <div class="info">Time: ' . date('H:i:s a', strtotime($customer_info->created_at)) . '</div>
+        <div class="info">Time: ' . $tx_time->format('h:i') . '</div>
         <div class="info">Cashier: ' . Auth::user()->name . '</div>
 
         <div class="divider"><strong>ORDER DETAILS</strong></div>
@@ -120,16 +122,16 @@ class PrintController extends Controller
         $change = $customer_info->amount_tendered - $total_payable;
 
         $str .= '</table>
-        <div class="divider">-------------------------------------------------------</div>
+        <div class="divider">-------------------------------------------------------------------------------------------------------</div>
         <div class="info">Total # of item(s): ' . $itemcount . '</div>
-        <div class="divider">-------------------------------------------------------</div>
+        <div class="divider">-------------------------------------------------------------------------------------------------------</div>
         <div class="info">Total Amount Payable: ' . number_format($total_payable, 2) . '</div>
-        <div class="divider">-------------------------------------------------------</div>
+        <div class="divider">-------------------------------------------------------------------------------------------------------</div>
         <div class="info">Amount Tendered: ' . number_format($customer_info->amount_tendered, 2) . '</div>
-        <div class="divider">-------------------------------------------------------</div>
+        <div class="divider">-------------------------------------------------------------------------------------------------------</div>
         <div class="info">Change: ' . number_format($change, 2) . '</div>
-        <div class="divider">-------------------------------------------------------</div>
-        <div class="center" style="font-size: 8pt;">******* Not valid as official receipt *******</div>
+        <div class="divider">-------------------------------------------------------------------------------------------------------</div>
+        <div class="center" style="font-size: 8pt;">************** Not valid as official receipt **************</div>
         </body>
         </html>';
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use DB;
 use Validator;
 use App\Rules\AmountPaidRule;
@@ -243,8 +242,8 @@ class SalesController extends Controller{
 								'customer_address'=>$req->input('customer_address'),
 								'transaction_notes'=>$req->input('transaction_notes'),
 								'amount_tendered'=>$req->input('amt_paid'),
-								'created_at'=>date('Y-m-d h:i:s'),
-								'updated_at'=>date('Y-m-d h:i:s')
+								'created_at'=>date('Y-m-d H:I:s A'),
+								'updated_at'=>date('Y-m-d H:I:s A')
 							]);
             										
 
@@ -259,8 +258,8 @@ class SalesController extends Controller{
 		            			'transaction_id'=>$trasaction_save_id,
 		            			'product_code'=>$data['id'],
 		            			'product_qty_ordered'=>$data['quantity'],
-		            			'created_at'=>date('Y-m-d h:i:s'),
-		            			'updated_at'=>date('Y-m-d h:i:s')
+		            			'created_at'=>date('Y-m-d H:I:s A'),
+		            			'updated_at'=>date('Y-m-d H:I:s A')
 		            		]);
 
 		                $item_current_stocks = DB::table('product_list')->where('product_code','=',$data['id'])->first();
