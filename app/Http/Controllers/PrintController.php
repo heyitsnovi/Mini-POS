@@ -24,7 +24,8 @@ class PrintController extends Controller
             $data = [
                 'store_name' => '',
                 'contact_number' => '',
-                'address' => ''
+                'address' => '',
+                'currency_sign' => ''
             ];
         }
 
@@ -42,7 +43,6 @@ class PrintController extends Controller
 
         $tx_time = new \DateTime($customer_info->created_at);
 
-        // Start building HTML string
         $str = '<html>
         <head>
         <title>Order Details</title>
@@ -92,17 +92,18 @@ class PrintController extends Controller
         </div>
 
         <div class="info">Date: ' . date('m/d/Y', strtotime($customer_info->created_at)) . '</div>
-        <div class="info">Time: ' . $tx_time->format('h:i') . '</div>
+        <div class="info">Time: ' . $tx_time->format('h:i A') . '</div>
         <div class="info">Cashier: ' . Auth::user()->name . '</div>
+        <div class="info">Customer: ' . ucwords($customer_info->customer_info) . '</div>
 
-        <div class="divider"><strong>ORDER DETAILS</strong></div>
+        <div class="divider"><strong>SALES INVOICE : ' .$customer_info->transaction_or_number. '</strong></div>
 
         <table>
             <tr>
                 <th>Item Name</th>
-                <th class="center">Price</th>
-                <th class="right">Qty</th>
-                <th class="right">Payable</th>
+                <th class="right">Quantity</th>
+                <th class="center">Unit Price</th>
+                <th class="right">Price</th>
             </tr>';
 
         foreach ($orders as $order) {
@@ -113,8 +114,11 @@ class PrintController extends Controller
             $str .= '
             <tr>
                 <td>' . $order->product_name . '</td>
-                <td class="center">' . number_format($order->product_price, 2) . '</td>
+
                 <td class="right">' . $order->product_qty_ordered . '</td>
+                
+                <td class="right">' . number_format($order->product_price, 2) . '</td>
+
                 <td class="right">' . number_format($line_total, 2) . '</td>
             </tr>';
         }
@@ -122,22 +126,27 @@ class PrintController extends Controller
         $change = $customer_info->amount_tendered - $total_payable;
 
         $str .= '</table>
-        <div class="divider">-------------------------------------------------------------------------------------------------------</div>
+        <br>
         <div class="info">Total # of item(s): ' . $itemcount . '</div>
-        <div class="divider">-------------------------------------------------------------------------------------------------------</div>
-        <div class="info">Total Amount Payable: ' . number_format($total_payable, 2) . '</div>
-        <div class="divider">-------------------------------------------------------------------------------------------------------</div>
-        <div class="info">Amount Tendered: ' . number_format($customer_info->amount_tendered, 2) . '</div>
-        <div class="divider">-------------------------------------------------------------------------------------------------------</div>
-        <div class="info">Change: ' . number_format($change, 2) . '</div>
-        <div class="divider">-------------------------------------------------------------------------------------------------------</div>
-        <div class="center" style="font-size: 8pt;">************** Not valid as official receipt **************</div>
+
+        <div class="info">Total Amount Payable: '.$data["currency_sign"] .' ' . number_format($total_payable, 2) . '</div>
+
+        <div class="info">Amount Tendered: '.$data["currency_sign"] .' ' . number_format($customer_info->amount_tendered, 2) . '</div>
+
+        <div class="info">Change: '.$data["currency_sign"] .' ' . number_format($change, 2) . '</div>
+        <div class="divider"> --------------------------------------------------------------------------------------------------</div>
+        <div class="center" style="font-size: 9pt; font-weight:bold;">************ NOT VALID AS OFFICIAL RECEIPT ************</div>
         </body>
         </html>';
 
-        // Generate PDF
+        //A6
+        $paper_size_one = [105,148.5];
+        // 1/4 Sheet of paper
+        $paper_size_two = [100,125];
+
+
         $mpdf = new \Mpdf\Mpdf([
-            'format' => [105, 148.5], // 1/4 A4 in mm
+            'format'=>$paper_size_one,
             'default_font_size' => 8,
             'margin_top' => 5,
             'margin_bottom' => 5,
@@ -146,6 +155,6 @@ class PrintController extends Controller
         ]);
 
         $mpdf->WriteHTML($str);
-        $mpdf->Output(); // or ->Output('receipt.pdf', 'D') to download
+        $mpdf->Output();
     }
 }

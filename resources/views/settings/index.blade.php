@@ -60,6 +60,18 @@
                         @enderror
                     </div>
 
+
+                        <div class="form-group">
+                            <label for="currency_symbol">Currency Sign / Symbol</label>
+                            <input type="text" class="form-control @error('currency_symbol') is-invalid @enderror" 
+                               id="currency_symbol" name="currency_symbol" 
+                               value="{{ old('currency_symbol', $data['currency_sign']) }}">
+                            @error('currency_symbol')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+
                     <button type="submit" class="btn btn-primary">Save Store Settings</button>
                 </form>
             </div>

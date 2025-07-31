@@ -198,6 +198,7 @@ class SalesController extends Controller{
 
         $payment_type = $req->input('transaction_type');
 
+        $now = date('Y-m-d H:i:s');
  
 
     	$rules = [
@@ -242,8 +243,8 @@ class SalesController extends Controller{
 								'customer_address'=>$req->input('customer_address'),
 								'transaction_notes'=>$req->input('transaction_notes'),
 								'amount_tendered'=>$req->input('amt_paid'),
-								'created_at'=>date('Y-m-d H:I:s A'),
-								'updated_at'=>date('Y-m-d H:I:s A')
+								'created_at'=>$now,
+								'updated_at'=>$now
 							]);
             										
 
@@ -258,8 +259,8 @@ class SalesController extends Controller{
 		            			'transaction_id'=>$trasaction_save_id,
 		            			'product_code'=>$data['id'],
 		            			'product_qty_ordered'=>$data['quantity'],
-		            			'created_at'=>date('Y-m-d H:I:s A'),
-		            			'updated_at'=>date('Y-m-d H:I:s A')
+		            			'created_at'=>$now,
+		            			'updated_at'=>$now
 		            		]);
 
 		                $item_current_stocks = DB::table('product_list')->where('product_code','=',$data['id'])->first();

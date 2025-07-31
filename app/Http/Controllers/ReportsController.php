@@ -251,9 +251,11 @@ public function customerReportFilterDate(Request $req){
 			  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> Actions
 			  <span class="caret"></span></button>
 			  <ul class="dropdown-menu">
-			    <li><a style="cursor:pointer;" data-ornumber="'.$transaction->transaction_or_number.'" class=" btn-view-transaction"><i class="fa fa-eye"></i> View</a></li>
-			    <li><a target="_blank" href=" '.url('admin/sales/print-transaction/code').'/'.$transaction->transaction_log_id.' " data-logid="'.$transaction->transaction_log_id.'" class=""><i class="fa fa-print"></i> Receipt </a></li>
-			    <li><a style="cursor:pointer;" data-ornumber="'.$transaction->transaction_log_id.'" class=" btn-sm btn-cancel-sales"><i class="fa fa-ban"></i> Cancel </a></li>
+			    <li><a style="cursor:pointer;" data-ornumber="'.$transaction->transaction_or_number.'" class=" btn-view-transaction"><i class="fa fa-eye"></i> View Details</a></li>
+
+			    <li><a target="_blank" href=" '.url('admin/sales/print-transaction/code').'/'.$transaction->transaction_log_id.' " data-logid="'.$transaction->transaction_log_id.'" class=""><i class="fa fa-print"></i> Print Sales Invoice </a></li>
+
+			    <li><a style="cursor:pointer;" data-ornumber="'.$transaction->transaction_log_id.'" class="btn-cancel-sales"><i class="fa fa-ban"></i> Cancel Transaction </a></li>
 			  </ul>
 			</div>
 

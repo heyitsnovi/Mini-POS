@@ -24,6 +24,7 @@ class SettingsController extends Controller
             'store_name' => '',
             'contact_number' => '',
             'address' => '',
+            'currency_sign'=>"₱",
             'theme' => 'skin-green', // Default theme if not set
         ];
     }
@@ -40,6 +41,7 @@ class SettingsController extends Controller
         'contactNumber'  => 'required|string|max:20',
         'address'        => 'required|string|max:500',
          'theme'          => 'required|string|in:skin-green,skin-blue,skin-black,skin-red,skin-purple,skin-yellow',
+        'currency_symbol'        => 'max:1',
     ]);
 
     if ($validator->fails()) {
@@ -55,6 +57,7 @@ class SettingsController extends Controller
         'contact_number' => $request->input('contactNumber'),
         'address'        => $request->input('address'),
          'theme'          => $request->input('theme'),
+         'currency_sign'=>$request->input('currency_symbol')
     ];
 
     $filePath = base_path('store-settings.json');
