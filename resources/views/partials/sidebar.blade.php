@@ -22,7 +22,7 @@
             <li class="{{ $request->segment(1) == 'home' ? 'active' : '' }}">
                 <a href="{{ url('/') }}">
                     <i class="fa fa-dashboard"></i>
-                    <span class="title">Dashboard</span>
+                    <span class="title">Dashboard Home</span>
                 </a>
             </li>
                 
@@ -196,7 +196,7 @@
 
             <li>
                 <a href="#logout" onclick="$('#logout').submit();">
-                    <i class="fa fa-arrow-left"></i>
+                    <i class="fa fa-power-off"></i>
                     <span class="title">Logout {{Auth::user()->name}}</span>
                 </a>
             </li>
