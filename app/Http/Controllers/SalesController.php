@@ -187,7 +187,7 @@ class SalesController extends Controller{
 				    ->whereDate('transaction_date', date('Y-m-d'))
 				    ->count();
 
-				$new_order_id = date('m-d').'-'. sprintf("%04d",( $tx_count)+1);
+				$new_order_id = date('Y').'-'.date('m-d').'-'. sprintf("%04d",( $tx_count)+1);
 
 				return view('sales.paytransaction',['amount_payable'=>\Cart::getTotal(),'order_id'=>$new_order_id]);
 		}

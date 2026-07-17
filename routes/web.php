@@ -104,7 +104,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('admin/utils/generate-db-backup', [UtilsController::class, 'generateBackUp']);
     Route::post('admin/ajax/product-list',[ProductOperationController::class,'ajaxProductList']);
     Route::post('admin/utils/store-settings/save',[SettingsController::class,'saveStoreSettings']);
-
+    Route::post('admin/ajax/remove-transaction-item',[ReportsController::class,'removeTransactionItem']);
 
 });
 
@@ -125,7 +125,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
    	Route::post('admin/sales/submit-coupon', [SalesController::class, 'submitCouponCode']);
     Route::post('admin/sales/products-json-items', [ProductListController::class, 'showProductListViaJSON']);
     Route::post('admin/ajax/product-list',[ProductOperationController::class,'ajaxProductList']);
-
+    Route::post('admin/ajax/remove-transaction-item',[ReportsController::class,'removeTransactionItem']);
 
 });
 

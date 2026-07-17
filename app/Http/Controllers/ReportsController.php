@@ -11,6 +11,31 @@ use Auth;
 class ReportsController extends Controller{
 
 
+    public function removeTransactionItem(Request $req){
+
+        $transaction_id = $req->input('transaction_id');
+ 
+        $order_id = $req->input('order_id');
+
+        $is_valid_item = DB::table('order_log')->where('transaction_id','=',$transaction_id)->where('order_id','=',$order_id);
+
+        if($is_valid_item->count() == 1){
+
+            $delete_item = $is_valid_item->delete();
+
+            if($delete_item){
+                return response()->json(['status'=>true]);
+            }else{
+                return response()->json(['status'=>false]);
+            }
+            
+        }else{
+
+            return response()->json(['status'=>false]);
+        }
+
+    }
+
 	public function dailySales(){
 
 	    $today = Carbon::today()->format('Y-m-d');

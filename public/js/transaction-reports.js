@@ -208,6 +208,7 @@ $(document).ready(function(){
 $('.tbl-customer-salesresult').on('xhr.dt', function (e, settings, json, xhr) {
     totalSales = json.total_sales ?? '0.00';
     printedBy  = json.current_username ?? 'Admin';
+    $('.earnings-to-date').html(totalSales);
 });
 
 	$('.start_report_date').datepicker({

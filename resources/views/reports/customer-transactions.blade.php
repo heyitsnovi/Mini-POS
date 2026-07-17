@@ -8,8 +8,8 @@
 </style>
 <div class="row">
 
-	<div class="col-md-12">
-			<div class="box box-danger">
+	<div class="col-md-6">
+			<div class="box box-success">
 				<div class="box-header with-border">
                  	 <h3 class="box-title"><i class="fa fa-calendar"></i> Date Select</h3>
                 </div>
@@ -17,11 +17,11 @@
                 	
                 	 <div class="col-md-6">
                 			<label>Start Date:</label>
-                			<input type="text" name="start_report_date" class="form-control start_report_date" value="<?php echo isset($_GET["start_date"]) ? $_GET['start_date'] : '' ?>"  />
+                			<input type="text" name="start_report_date" class="form-control start_report_date" value="<?php echo isset($_GET["start_date"]) ? $_GET['start_date'] : date('Y-m-d') ?>"  />
                 		</div>
                 		<div class="col-md-6">
                 			<label>End Date:</label>
-                			<input type="text" name="end_report_date" class="form-control end_report_date"  value="<?php echo isset($_GET["end_date"]) ? $_GET['end_date'] : '' ?>" />
+                			<input type="text" name="end_report_date" class="form-control end_report_date"  value="<?php echo isset($_GET["end_date"]) ? $_GET['end_date'] : date('Y-m-d') ?>" />
                 		</div>
                 		
                 		<div class="col-md-12">
@@ -40,6 +40,23 @@
                 </div>
 			</div>
 	</div>
+
+		<div class="col-md-6">
+			<div class="box box-success">
+				<div class="box-header with-border">
+                 	 <h3 class="box-title"><i class="fa fa-check"></i> Summary</h3>
+                </div>
+                <div class="box-body">
+                	<p style="
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+  
+    ">Earnings: ₱<span class="earnings-to-date" style="color:green;">0.00</span></p>
+                </div>
+			</div>
+	</div>
+
 
 	<div class="col-md-12">
 			<div class="box box-success">
