@@ -58,7 +58,7 @@ class ProductListController extends Controller{
             $json = [];
 
             foreach($listProducts as $listItems){
-                array_push($json, ['icon'=>$listItems->product_image!==null ? $listItems->product_image:'images/no-image.png','id'=>$listItems->product_id,'itemcode'=>$listItems->product_code,'text'=>$listItems->product_name]);
+                array_push($json, ['icon'=>$listItems->product_image!==null ? $listItems->product_image:'images/no-image.png','id'=>$listItems->product_id,'itemcode'=>$listItems->product_code,'text'=>$listItems->product_name,'price'=>$listItems->product_price]);
             }
             
             return response()->json(['results'=>$json]);

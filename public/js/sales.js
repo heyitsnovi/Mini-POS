@@ -108,7 +108,7 @@
 							text: item.itemcode,
 							html: [ 
 									$('<img>').attr('src', window.location.origin+'/'+item.icon).css("height", 40), '  ',
-									item.text 
+									item.text , ' - ₱ ' , item.price
 								] 
 						};
 					},
