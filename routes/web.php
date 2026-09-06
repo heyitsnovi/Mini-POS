@@ -105,7 +105,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('admin/ajax/product-list',[ProductOperationController::class,'ajaxProductList']);
     Route::post('admin/utils/store-settings/save',[SettingsController::class,'saveStoreSettings']);
     Route::post('admin/ajax/remove-transaction-item',[ReportsController::class,'removeTransactionItem']);
-
+    Route::post('admin/ajax/save-cart-draft',[SalesController::class,'saveCartDraft']);
+    Route::post('admin/upload-cart-draft',[SalesController::class,'loadSavedTransactionDraftFromJSON']);
 });
 
  
@@ -126,7 +127,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('admin/sales/products-json-items', [ProductListController::class, 'showProductListViaJSON']);
     Route::post('admin/ajax/product-list',[ProductOperationController::class,'ajaxProductList']);
     Route::post('admin/ajax/remove-transaction-item',[ReportsController::class,'removeTransactionItem']);
-
+    Route::post('admin/ajax/save-cart-draft',[SalesController::class,'saveCartDraft']);
+    Route::post('admin/upload-cart-draft',[SalesController::class,'loadSavedTransactionDraftFromJSON']);
 });
 
 /* Add Extra App Routes */

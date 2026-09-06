@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUsersRequest;
 use App\Http\Requests\Admin\UpdateUsersRequest;
+use Illuminate\Support\Facades\Storage;
 
 class SalesController extends Controller{
     //
@@ -300,7 +301,102 @@ class SalesController extends Controller{
         	}
 		}
 
-	}
+		public function saveCartDraft(Request $req){
 
+			$cartCollection = \Cart::getContent();
+			
+			$items = $cartCollection->toArray();
+
+			$time_stamp = time();
+
+			$json_filename = $req->input('filename');
+
+			$filePath = public_path('exports/'.$json_filename.'-pos-draft-'.$time_stamp.'.json');
+
+			if (!file_exists(dirname($filePath))) {
+
+			    mkdir(dirname($filePath), 0755, true);
+
+			}
+
+			file_put_contents($filePath, json_encode($items, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+			if(file_exists($filePath)){
+
+					echo json_encode(['save_status'=>true,'item_url'=> url('exports/').''.$json_filename.'-pos-draft-'.$time_stamp.'.json' ]);
+
+			}else{
+
+					echo json_encode(['save_status'=>false,'item_url'=>NULL]);
+
+			}	
+		}
+
+
+	public function loadSavedTransactionDraftFromJSON(Request $req){
+
+		    // Validate the uploaded file
+		    $req->validate([
+		        'json_file' => 'required|file|mimes:json|max:10240',
+		    ]);
+
+		    // Get the uploaded file
+		    $file = $req->file('json_file');
+
+		    // Read the file contents
+		    $json = file_get_contents($file->getRealPath());
+
+		    // Decode JSON into a PHP array
+		    $data = json_decode($json, true);
+
+		    // Check if JSON is valid
+		    if (json_last_error() !== JSON_ERROR_NONE) {
+		        return back()->with('error', 'Invalid JSON file.');
+		    }
+
+		    //clear cart
+		     \Cart::clear();
+			\Cart::clearCartConditions();
+
+		    $products = []; 
+
+			    foreach ($data as $product_items) {
+
+ 						
+		 			$product_id= $product_items['id'];
+
+					$product = DB::table('product_list')->where('product_code','=',$product_id)->first();
+
+					//start begin add products
+					if(is_object($product)){
+
+		 
+						 if(\Cart::get($product_id )===null){
+
+							 if((int)$product->stock_onhand > 0){
+
+									\Cart::add($product->product_code, $product->product_name,$product->product_price, $product_items['quantity'], []);
+					
+								}
+
+							}else if(\Cart::get($product_id)->quantity<$product->stock_onhand){
+
+										\Cart::add($product->product_code, $product->product_name,$product->product_price,$product_items['quantity'], []);
+ 
+							}
+							else{
+								 
+							}
+						 
+					}
+					//end begin add products
+
+		      }
+ 			
+ 				return back()->with('status', 'JSON file uploaded successfully.');
+		 
+		}
+
+	}
 
 ?>

@@ -1,6 +1,6 @@
 	cartItems();
 	enableCancelSalesBtn();
-	autofocus_barcodefield();
+
 
 	toastr.options = {
 	  "closeButton": false,
@@ -363,18 +363,60 @@ function payTransaction(){
 	})
 }
 
-function autofocus_barcodefield(){
+let barcodeFocusInterval = null;
 
-	const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone|Opera Mini/i.test(navigator.userAgent);
+function autofocus_barcodefield() {
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone|Opera Mini/i.test(navigator.userAgent);
 
-	if(!isMobile){
-		setInterval(function(){
-			if($(document).find('.bootbox-body').length > 0 || $('.searchItem').is(":focus")){
-			}else{
-				$('.barcode-item').focus();
+    if (isMobile) return;
+
+    // Prevent multiple intervals from being created
+    if (barcodeFocusInterval !== null) return;
+
+    barcodeFocusInterval = setInterval(function() {
+        if ($('.bootbox-body').length > 0 || $('.searchItem').is(":focus")) {
+            // Do nothing
+        } else {
+            $('.barcode-item').focus();
+        }
+    }, 1000);
+}
+
+function stopAutofocus() {
+    if (barcodeFocusInterval !== null) {
+        clearInterval(barcodeFocusInterval);
+        barcodeFocusInterval = null;
+    }
+}
+
+function resumeAutofocus() {
+    autofocus_barcodefield();
+}
+
+function saveCartDraft(inputValue){
+
+	$.ajax({
+		url: '/admin/ajax/save-cart-draft',
+		type: 'POST',
+		data:{
+			_token: $("meta[name='csrf-token']").attr('content'),
+			filename:inputValue
+		},
+		success:function(response){
+
+			let res = JSON.parse(response);
+
+			if(res.save_status == true){
+
+			swal("Success", "File Saved as : "+ inputValue + "", "success").then(function() {
+ 					
+ 					autofocus_barcodefield();
+			});
+		
 			}
-		},1000);
-	}
+		}
+	});
+
 }
 
 //Shortcut Keys!
@@ -407,3 +449,88 @@ shortcut.add("F10",function() {
 	}
 	
 });
+
+
+$('.btn-draft-save').click(function(){
+	
+	stopAutofocus();
+
+	 swal({
+	  title: "Enter File Name",
+	  content: {
+	    element: "input",
+	    attributes: {
+	      placeholder: "Enter filename here...",
+	      type: "text",
+	    },
+	  },
+	  buttons: true
+	})
+	.then(function(inputValue) {
+
+	  if (inputValue === null) return; 
+
+	  if (inputValue === "") {
+	    swal("Error!", "File not saved. filename cannot be empty", "error");
+	    return;
+	  }
+	  saveCartDraft(inputValue);
+
+	});
+
+});
+
+
+shortcut.add("F11",function() {
+
+  if($('.tbl-pos-cart-item').length>0){
+		$('.btn-draft-save').click();
+	}
+	
+});
+
+$('.btn-upload-cart-draft').on('click',function(){
+
+		let cartItemsCount = $('.tbl-pos-cart-item').length;
+
+
+		if ($('#json_file')[0].files.length === 0) {
+
+			swal("Select File", "Please Select File First.", "info");
+
+		}else{
+
+			if(cartItemsCount > 0){
+
+				playBeepSound('popup.wav');
+
+				swal({
+					  title: "Import Notice",
+					  text: "Uploading JSON will erase all current item(s) in the cart. Would you like to proceed?",
+					  icon: "warning",
+					  buttons: ["No", "Yes"], 
+					  dangerMode: true,
+					})
+					.then(function(confirmAnswer) {
+					  if (confirmAnswer) {
+					 
+					    	$('#upload-cart-draft-form').submit();
+
+					  } else {
+			 
+					    swal("Upload Cancelled", "JSON File was not loaded.", "info");
+
+					  }
+					});
+
+			}else{
+
+				$('#upload-cart-draft-form').submit();
+			}
+
+		}
+
+});
+
+
+autofocus_barcodefield();

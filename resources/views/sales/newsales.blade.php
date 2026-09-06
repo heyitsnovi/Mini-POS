@@ -3,6 +3,12 @@
 @section('content')
 
 </style>
+  @if (session('status'))
+<div class="alert alert-success no-border">
+    <button type="button" class="close" data-dismiss="alert"><span>×</span><span class="sr-only">Close</span></button>
+    <span class="text-semibold">Success : </span> {{ session('status') }}
+</div>
+@endif
     <div class="row">
         <div class="col-md-4">
 
@@ -33,6 +39,25 @@
                         <code>Coupon codes are not stackable. Only 1 coupon code per transaction is allowed.</code>
                 </div>
             </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+              <i class="fa fa-upload"></i> Load JSON Transaction Draft
+                </div>
+                <div class="panel-body">
+                    <form method="POST" action="{{ url('admin/upload-cart-draft') }}" enctype="multipart/form-data" id="upload-cart-draft-form">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+
+                        <input type="file" name="json_file" class="form-control" accept=".json" required id="json_file">
+
+                        <button type="button" class="btn btn-primary btn-block btn-upload-cart-draft" style="margin-top: 10px;">
+                            <i class="fa fa-upload"></i> Upload
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+
         </div>
         <div class="col-md-8">
              <div class="panel panel-default">
@@ -44,6 +69,7 @@
                         <button type="button" class="btn btn-success btn-add-payment"><i class="fa fa-money"></i> F7 -  Payment</button>
                         <button type="button" class="btn btn-primary btn-sales-coupon-add  "><i class="fa fa-tags"></i> F9 -  Coupon</button>
                       <button type="button" class="btn btn-danger btn-cancel-sales  "><i class="fa fa-ban"></i> F10 - Cancel Sales</button>
+                      <button type="button" class="btn btn-warning btn-draft-save  "><i class="fa fa-save"></i> F11 - Save Draft</button>
                     </div>
                 </div>
             </div>
